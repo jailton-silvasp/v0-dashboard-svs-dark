@@ -84,7 +84,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
         {/* Footer */}
         <div className="p-6 border-t border-[#2a2a2a] text-center mt-auto">
-          <p className="text-xs text-gray-500">© 2025 SVS - Dark War</p>
+          <p className="text-xs text-gray-500">© 2025 SVS - ELO</p>
           <p className="text-xs text-gray-600">Todos os direitos reservados.</p>
         </div>
       </aside>
