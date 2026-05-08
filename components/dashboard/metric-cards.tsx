@@ -2,6 +2,7 @@
 
 import { Swords, Trophy, Flag, Users } from "lucide-react"
 import { useDashboard, useRanking } from "@/hooks/use-api"
+import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export function MetricCards() {
@@ -75,7 +76,7 @@ export function MetricCards() {
             </span>
           </div>
           <p className="text-3xl font-bold text-white group-hover:text-[#c9a55c] transition-colors">
-            {metric.value.toLocaleString('pt-BR')}
+            {formatPoints(metric.value)}
           </p>
           <p className="text-xs text-gray-500 mt-1">{metric.subtitle}</p>
         </div>

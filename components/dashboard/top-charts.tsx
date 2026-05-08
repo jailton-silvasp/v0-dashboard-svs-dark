@@ -1,8 +1,9 @@
 "use client"
 
 import { Trophy, Clock } from "lucide-react"
-import { useRanking, useRankingDiario } from "@/hooks/use-api"
+import { useRankingDiario } from "@/hooks/use-api"
 import { Skeleton } from "@/components/ui/skeleton"
+import { formatPoints } from "@/lib/api"
 
 interface ChartData {
   name: string
@@ -69,7 +70,7 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: C
                 <span className="text-gray-400 text-xs whitespace-nowrap truncate">{item.name}</span>
               </div>
               <span className="text-white text-sm text-right font-medium">
-                {Math.round(item.points).toLocaleString('pt-BR')}
+                {formatPoints(item.points)}
               </span>
             </div>
           ))
@@ -86,14 +87,18 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: C
 }
 
 export function TopCharts() {
-  const { ranking: rankingGeral, isLoading: isLoadingGeral } = useRanking()
   const { ranking: rankingDiario, isLoading: isLoadingDiario } = useRankingDiario()
 
-  const maioresPontosData: ChartData[] = rankingGeral.slice(0, 10).map(p => ({
-    name: p.usuario,
-    points: p.total
-  }))
+  // Top 10 Geral - Maiores Pontos (do dia vigente, ordenado por maior pontuação)
+  const maioresPontosData: ChartData[] = [...rankingDiario]
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10)
+    .map(p => ({
+      name: p.usuario,
+      points: p.total
+    }))
 
+  // Top 10 Geral - Últimos Pontos (do dia vigente, ordenado pelos últimos registros)
   const ultimosPontosData: ChartData[] = rankingDiario.slice(0, 10).map(p => ({
     name: p.usuario,
     points: p.total
@@ -106,15 +111,15 @@ export function TopCharts() {
         icon={<Trophy className="w-5 h-5 text-[#c9a55c]" />}
         data={maioresPontosData}
         color="#c9a55c"
-        subtitle="Pontuação geral - Top 10"
-        isLoading={isLoadingGeral}
+        subtitle="Maiores pontuações do dia"
+        isLoading={isLoadingDiario}
       />
       <HorizontalBarChart
-        title="Top 10 Diário - Pontos Hoje"
+        title="Top 10 Geral - Últimos Pontos"
         icon={<Clock className="w-5 h-5 text-[#c9a55c]" />}
         data={ultimosPontosData}
         color="#c9a55c"
-        subtitle="Pontos registrados hoje"
+        subtitle="Últimos registros do dia"
         isLoading={isLoadingDiario}
       />
     </div>

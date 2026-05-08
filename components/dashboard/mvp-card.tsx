@@ -2,6 +2,7 @@
 
 import { Crown, User } from "lucide-react"
 import { useRanking } from "@/hooks/use-api"
+import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export function MVPCard() {
@@ -58,7 +59,7 @@ export function MVPCard() {
             <h4 className="text-white font-bold text-lg text-center">{mvp.usuario}</h4>
             <p className="text-gray-400 text-sm mt-1">Pontos</p>
             <p className="text-[#c9a55c] text-4xl font-bold">
-              {Math.round(mvp.total).toLocaleString('pt-BR')} <span className="text-lg">pts</span>
+              {formatPoints(mvp.total)} <span className="text-lg">pts</span>
             </p>
             <p className="text-gray-500 text-xs mt-2">Parabéns pelo desempenho!</p>
 

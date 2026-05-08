@@ -2,6 +2,7 @@
 
 import { Trophy, Crown, User, ChevronRight } from "lucide-react"
 import { useRanking } from "@/hooks/use-api"
+import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 function getPositionColor(position: number) {
@@ -66,7 +67,7 @@ export function TopRanking() {
             const isTop = position === 1
             return (
               <div
-                key={player.discord_id || player.usuario}
+                key={`${player.discord_id || player.usuario}-${index}`}
                 className={`grid grid-cols-[40px_1fr_80px] gap-2 items-center py-2 px-1 rounded transition-all duration-200 hover:bg-[#2a2a2a] cursor-pointer group ${getPositionBg(position)}`}
               >
                 <span className={`text-center font-bold ${getPositionColor(position)}`}>
@@ -83,7 +84,7 @@ export function TopRanking() {
                 </div>
                 <div className="flex items-center justify-end gap-1">
                   <span className={`font-bold text-sm ${isTop ? "text-[#c9a55c]" : "text-white"}`}>
-                    {Math.round(player.total).toLocaleString('pt-BR')}
+                    {formatPoints(player.total)}
                   </span>
                   <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-[#c9a55c] transition-colors" />
                 </div>
