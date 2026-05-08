@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { 
   Home, 
   Trophy, 
@@ -8,8 +9,7 @@ import {
   Flag, 
   Crown, 
   Clock, 
-  Users, 
-  Settings,
+  Users,
   X 
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -23,7 +23,6 @@ const navItems = [
   { icon: Crown, label: "MVP da Semana", active: false },
   { icon: Clock, label: "Histórico", active: false },
   { icon: Users, label: "Jogadores", active: false },
-  { icon: Settings, label: "Configurações", active: false },
 ]
 
 interface MobileSidebarProps {
@@ -54,12 +53,16 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
         {/* Logo */}
         <div className="p-6 flex flex-col items-center border-b border-[#2a2a2a]">
-          <div className="relative">
-            <Crown className="w-14 h-14 text-[#c9a55c]" />
-            <Swords className="w-7 h-7 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
+          <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-[#c9a55c] shadow-lg shadow-[#c9a55c]/20">
+            <Image
+              src="/logo-elo.png"
+              alt="ELO Supremo"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
-          <h1 className="text-3xl font-bold text-[#c9a55c] mt-2">SVS</h1>
-          <span className="text-sm text-red-500 font-semibold tracking-wider">DARK WAR</span>
+          <span className="text-sm text-red-500 font-semibold tracking-wider mt-2">DARK WAR</span>
         </div>
 
         {/* Navigation */}
@@ -84,7 +87,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
         {/* Footer */}
         <div className="p-6 border-t border-[#2a2a2a] text-center mt-auto">
-          <p className="text-xs text-gray-500">© 2025 SVS - Dark War</p>
+          <p className="text-xs text-gray-500">© 2025 SVS - ΞLØ</p>
           <p className="text-xs text-gray-600">Todos os direitos reservados.</p>
         </div>
       </aside>

@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { 
   Home, 
   Trophy, 
@@ -8,8 +9,7 @@ import {
   Flag, 
   Crown, 
   Clock, 
-  Users, 
-  Settings 
+  Users
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -22,7 +22,6 @@ const navItems = [
   { icon: Crown, label: "MVP da Semana", active: false },
   { icon: Clock, label: "Histórico", active: false },
   { icon: Users, label: "Jogadores", active: false },
-  { icon: Settings, label: "Configurações", active: false },
 ]
 
 export function Sidebar() {
@@ -30,12 +29,16 @@ export function Sidebar() {
     <aside className="w-[200px] bg-[#0d0d0d] border-r border-[#2a2a2a] flex flex-col h-full">
       {/* Logo */}
       <div className="p-4 flex flex-col items-center border-b border-[#2a2a2a]">
-        <div className="relative">
-          <Crown className="w-12 h-12 text-[#c9a55c]" />
-          <Swords className="w-6 h-6 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
+        <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#c9a55c] shadow-lg shadow-[#c9a55c]/20">
+          <Image
+            src="/logo-elo.png"
+            alt="ELO Supremo"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
-        <h1 className="text-2xl font-bold text-[#c9a55c] mt-1">SVS</h1>
-        <span className="text-xs text-red-500 font-semibold tracking-wider">DARK WAR</span>
+        <span className="text-xs text-red-500 font-semibold tracking-wider mt-2">DARK WAR</span>
       </div>
 
       {/* Navigation */}
@@ -59,7 +62,7 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="p-4 border-t border-[#2a2a2a] text-center">
-        <p className="text-xs text-gray-500">© 2025 SVS - Dark War</p>
+        <p className="text-xs text-gray-500">© 2025 SVS - ΞLØ</p>
         <p className="text-xs text-gray-600">Todos os direitos reservados.</p>
       </div>
     </aside>
