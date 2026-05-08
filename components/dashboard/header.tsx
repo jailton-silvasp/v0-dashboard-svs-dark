@@ -8,9 +8,11 @@ interface HeaderProps {
 }
 
 export function Header({ onMenuClick }: HeaderProps) {
-  const [currentTime, setCurrentTime] = useState(new Date())
+  const [currentTime, setCurrentTime] = useState<Date | null>(null)
 
   useEffect(() => {
+    // Inicializa apenas no cliente para evitar erro de hidratação
+    setCurrentTime(new Date())
     const timer = setInterval(() => {
       setCurrentTime(new Date())
     }, 1000)
@@ -55,8 +57,8 @@ export function Header({ onMenuClick }: HeaderProps) {
         <div className="hidden sm:flex items-center gap-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2">
           <Calendar className="w-4 h-4 text-gray-500" />
           <div className="text-right">
-            <p className="text-white text-sm">{formatDate(currentTime)}</p>
-            <p className="text-[#c9a55c] text-xs font-mono">{formatTime(currentTime)}</p>
+            <p className="text-white text-sm">{currentTime ? formatDate(currentTime) : "--"}</p>
+            <p className="text-[#c9a55c] text-xs font-mono">{currentTime ? formatTime(currentTime) : "--:--:--"}</p>
           </div>
         </div>
 
