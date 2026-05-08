@@ -4,6 +4,7 @@ export interface RankingPlayer {
   usuario: string
   discord_id: string
   total: number
+  avatar_url?: string
 }
 
 export interface DashboardData {
@@ -19,6 +20,7 @@ export interface RecentRecord {
   usuario: string
   valor: number
   criado_em: string
+  avatar_url?: string
 }
 
 // Formata pontos no formato abreviado (ex: 37.20M, 1.50K)
