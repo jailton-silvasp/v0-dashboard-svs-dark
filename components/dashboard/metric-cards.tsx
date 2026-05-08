@@ -1,39 +1,66 @@
 "use client"
 
 import { Swords, Trophy, Flag, Users } from "lucide-react"
-
-const metrics = [
-  {
-    icon: Swords,
-    label: "VS HOJE",
-    value: "142",
-    subtitle: "Confrontos registrados",
-    iconColor: "text-[#c9a55c]",
-  },
-  {
-    icon: Trophy,
-    label: "VS SEMANA",
-    value: "1.842",
-    subtitle: "Pontos acumulados",
-    iconColor: "text-[#c9a55c]",
-  },
-  {
-    icon: Flag,
-    label: "F1 SEMANAL",
-    value: "1.256",
-    subtitle: "Pontos acumulados",
-    iconColor: "text-[#3b82f6]",
-  },
-  {
-    icon: Users,
-    label: "JOGADORES",
-    value: "327",
-    subtitle: "Ativos na comunidade",
-    iconColor: "text-[#3b82f6]",
-  },
-]
+import { useDashboard, useRanking } from "@/hooks/use-api"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function MetricCards() {
+  const { data: dashboardData, isLoading: isLoadingDashboard } = useDashboard()
+  const { ranking, isLoading: isLoadingRanking } = useRanking()
+
+  const isLoading = isLoadingDashboard || isLoadingRanking
+
+  const metrics = [
+    {
+      icon: Swords,
+      label: "VS HOJE",
+      value: dashboardData?.hoje ?? 0,
+      subtitle: "Confrontos registrados",
+      iconColor: "text-[#c9a55c]",
+    },
+    {
+      icon: Trophy,
+      label: "VS TOTAL",
+      value: dashboardData?.total ?? 0,
+      subtitle: "Total de registros",
+      iconColor: "text-[#c9a55c]",
+    },
+    {
+      icon: Flag,
+      label: "TOP SCORE",
+      value: ranking.length > 0 ? Math.round(ranking[0]?.total ?? 0) : 0,
+      subtitle: "Maior pontuação",
+      iconColor: "text-[#3b82f6]",
+    },
+    {
+      icon: Users,
+      label: "JOGADORES",
+      value: ranking.length,
+      subtitle: "No ranking",
+      iconColor: "text-[#3b82f6]",
+    },
+  ]
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={i}
+            className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <Skeleton className="w-5 h-5 rounded bg-[#2a2a2a]" />
+              <Skeleton className="w-16 h-3 bg-[#2a2a2a]" />
+            </div>
+            <Skeleton className="w-20 h-8 bg-[#2a2a2a] mb-1" />
+            <Skeleton className="w-24 h-3 bg-[#2a2a2a]" />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {metrics.map((metric) => (
@@ -48,7 +75,7 @@ export function MetricCards() {
             </span>
           </div>
           <p className="text-3xl font-bold text-white group-hover:text-[#c9a55c] transition-colors">
-            {metric.value}
+            {metric.value.toLocaleString('pt-BR')}
           </p>
           <p className="text-xs text-gray-500 mt-1">{metric.subtitle}</p>
         </div>

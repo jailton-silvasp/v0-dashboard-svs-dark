@@ -1,8 +1,33 @@
 "use client"
 
 import { Crown, User } from "lucide-react"
+import { useRanking } from "@/hooks/use-api"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function MVPCard() {
+  const { ranking, isLoading, isError } = useRanking()
+
+  const mvp = ranking.length > 0 ? ranking[0] : null
+
+  if (isLoading) {
+    return (
+      <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Crown className="w-5 h-5 text-[#c9a55c]" />
+          <h3 className="text-[#c9a55c] font-semibold uppercase tracking-wide text-sm">
+            MVP da Semana
+          </h3>
+        </div>
+        <div className="flex flex-col items-center">
+          <Skeleton className="w-28 h-28 rounded-full bg-[#2a2a2a] mb-4" />
+          <Skeleton className="w-32 h-6 bg-[#2a2a2a] mb-2" />
+          <Skeleton className="w-16 h-4 bg-[#2a2a2a] mb-2" />
+          <Skeleton className="w-24 h-10 bg-[#2a2a2a]" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-5 transition-all duration-300 hover:border-[#c9a55c]">
       <div className="flex items-center gap-2 mb-4">
@@ -24,18 +49,26 @@ export function MVPCard() {
         </div>
 
         {/* Info */}
-        <h4 className="text-white font-bold text-lg">Jailton Silva</h4>
-        <p className="text-gray-400 text-sm mt-1">Pontos</p>
-        <p className="text-[#c9a55c] text-4xl font-bold">
-          965 <span className="text-lg">pts</span>
-        </p>
-        <p className="text-gray-500 text-xs mt-2">Parabéns pelo desempenho!</p>
+        {isError || !mvp ? (
+          <div className="text-center">
+            <p className="text-gray-500">Nenhum MVP ainda</p>
+          </div>
+        ) : (
+          <>
+            <h4 className="text-white font-bold text-lg text-center">{mvp.usuario}</h4>
+            <p className="text-gray-400 text-sm mt-1">Pontos</p>
+            <p className="text-[#c9a55c] text-4xl font-bold">
+              {Math.round(mvp.total).toLocaleString('pt-BR')} <span className="text-lg">pts</span>
+            </p>
+            <p className="text-gray-500 text-xs mt-2">Parabéns pelo desempenho!</p>
 
-        {/* Button */}
-        <button className="mt-4 flex items-center gap-2 px-6 py-2 border border-[#c9a55c] text-[#c9a55c] rounded-md text-sm hover:bg-[#c9a55c] hover:text-[#0d0d0d] transition-all duration-200">
-          <User className="w-4 h-4" />
-          VER PERFIL
-        </button>
+            {/* Button */}
+            <button className="mt-4 flex items-center gap-2 px-6 py-2 border border-[#c9a55c] text-[#c9a55c] rounded-md text-sm hover:bg-[#c9a55c] hover:text-[#0d0d0d] transition-all duration-200">
+              <User className="w-4 h-4" />
+              VER PERFIL
+            </button>
+          </>
+        )}
       </div>
     </div>
   )

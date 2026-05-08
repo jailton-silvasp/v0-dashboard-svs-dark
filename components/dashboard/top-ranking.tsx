@@ -1,19 +1,8 @@
 "use client"
 
 import { Trophy, Crown, User, ChevronRight } from "lucide-react"
-
-const rankings = [
-  { position: 1, name: "Jailton Silva", points: 965, isTop: true },
-  { position: 2, name: "Gabriel Santos", points: 920, isTop: false },
-  { position: 3, name: "Lucas Ferreira", points: 875, isTop: false },
-  { position: 4, name: "Matheus Souza", points: 730, isTop: false },
-  { position: 5, name: "Ryan Oliveira", points: 688, isTop: false },
-  { position: 6, name: "Vinicius Lima", points: 645, isTop: false },
-  { position: 7, name: "Felipe Rodrigues", points: 590, isTop: false },
-  { position: 8, name: "Anderson Pereira", points: 560, isTop: false },
-  { position: 9, name: "Leonardo Martins", points: 515, isTop: false },
-  { position: 10, name: "Bruno Alves", points: 498, isTop: false },
-]
+import { useRanking } from "@/hooks/use-api"
+import { Skeleton } from "@/components/ui/skeleton"
 
 function getPositionColor(position: number) {
   if (position === 1) return "text-[#c9a55c]"
@@ -30,6 +19,10 @@ function getPositionBg(position: number) {
 }
 
 export function TopRanking() {
+  const { ranking, isLoading, isError } = useRanking()
+
+  const top10 = ranking.slice(0, 10)
+
   return (
     <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-5 h-full transition-all duration-300 hover:border-[#c9a55c]">
       <div className="flex items-center gap-2 mb-4">
@@ -48,31 +41,56 @@ export function TopRanking() {
 
       {/* List */}
       <div className="space-y-1 mt-2">
-        {rankings.map((player) => (
-          <div
-            key={player.position}
-            className={`grid grid-cols-[40px_1fr_80px] gap-2 items-center py-2 px-1 rounded transition-all duration-200 hover:bg-[#2a2a2a] cursor-pointer group ${getPositionBg(player.position)}`}
-          >
-            <span className={`text-center font-bold ${getPositionColor(player.position)}`}>
-              {player.position}
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center">
-                <User className="w-4 h-4 text-gray-500" />
+        {isLoading ? (
+          [...Array(10)].map((_, i) => (
+            <div key={i} className="grid grid-cols-[40px_1fr_80px] gap-2 items-center py-2 px-1">
+              <Skeleton className="w-6 h-6 rounded bg-[#2a2a2a] mx-auto" />
+              <div className="flex items-center gap-2">
+                <Skeleton className="w-7 h-7 rounded-full bg-[#2a2a2a]" />
+                <Skeleton className="w-24 h-4 bg-[#2a2a2a]" />
               </div>
-              <span className="text-white text-sm group-hover:text-[#c9a55c] transition-colors">
-                {player.name}
-              </span>
-              {player.isTop && <Crown className="w-4 h-4 text-[#c9a55c]" />}
+              <Skeleton className="w-12 h-4 bg-[#2a2a2a] ml-auto" />
             </div>
-            <div className="flex items-center justify-end gap-1">
-              <span className={`font-bold text-sm ${player.isTop ? "text-[#c9a55c]" : "text-white"}`}>
-                {player.points}
-              </span>
-              <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-[#c9a55c] transition-colors" />
-            </div>
+          ))
+        ) : isError ? (
+          <div className="text-center py-8 text-gray-500">
+            Erro ao carregar ranking
           </div>
-        ))}
+        ) : top10.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            Nenhum jogador no ranking
+          </div>
+        ) : (
+          top10.map((player, index) => {
+            const position = index + 1
+            const isTop = position === 1
+            return (
+              <div
+                key={player.discord_id || player.usuario}
+                className={`grid grid-cols-[40px_1fr_80px] gap-2 items-center py-2 px-1 rounded transition-all duration-200 hover:bg-[#2a2a2a] cursor-pointer group ${getPositionBg(position)}`}
+              >
+                <span className={`text-center font-bold ${getPositionColor(position)}`}>
+                  {position}
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center">
+                    <User className="w-4 h-4 text-gray-500" />
+                  </div>
+                  <span className="text-white text-sm group-hover:text-[#c9a55c] transition-colors truncate">
+                    {player.usuario}
+                  </span>
+                  {isTop && <Crown className="w-4 h-4 text-[#c9a55c] flex-shrink-0" />}
+                </div>
+                <div className="flex items-center justify-end gap-1">
+                  <span className={`font-bold text-sm ${isTop ? "text-[#c9a55c]" : "text-white"}`}>
+                    {Math.round(player.total).toLocaleString('pt-BR')}
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-[#c9a55c] transition-colors" />
+                </div>
+              </div>
+            )
+          })
+        )}
       </div>
 
       {/* View All Button */}

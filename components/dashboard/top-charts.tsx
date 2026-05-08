@@ -1,53 +1,26 @@
 "use client"
 
-import { Trophy, Clock, User } from "lucide-react"
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-  LabelList,
-} from "recharts"
+import { Trophy, Clock } from "lucide-react"
+import { useRanking, useRankingDiario } from "@/hooks/use-api"
+import { Skeleton } from "@/components/ui/skeleton"
 
-const maioresPontosData = [
-  { name: "Jailton Silva", points: 965 },
-  { name: "Gabriel Santos", points: 920 },
-  { name: "Lucas Ferreira", points: 875 },
-  { name: "Matheus Souza", points: 730 },
-  { name: "Ryan Oliveira", points: 688 },
-  { name: "Vinicius Lima", points: 645 },
-  { name: "Felipe Rodrigues", points: 590 },
-  { name: "Anderson Pereira", points: 560 },
-  { name: "Leonardo Martins", points: 515 },
-  { name: "Bruno Alves", points: 498 },
-]
-
-const ultimosPontosData = [
-  { name: "Felipe Rodrigues", points: 210 },
-  { name: "Bruno Alves", points: 198 },
-  { name: "Anderson Pereira", points: 185 },
-  { name: "Leonardo Martins", points: 172 },
-  { name: "Vinicius Lima", points: 160 },
-  { name: "Matheus Souza", points: 145 },
-  { name: "Ryan Oliveira", points: 133 },
-  { name: "Lucas Ferreira", points: 120 },
-  { name: "Gabriel Santos", points: 110 },
-  { name: "Jailton Silva", points: 98 },
-]
+interface ChartData {
+  name: string
+  points: number
+}
 
 interface ChartProps {
   title: string
   icon: React.ReactNode
-  data: typeof maioresPontosData
+  data: ChartData[]
   color: string
   subtitle: string
+  isLoading?: boolean
 }
 
-function HorizontalBarChart({ title, icon, data, color, subtitle }: ChartProps) {
+function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: ChartProps) {
+  const maxPoints = data.length > 0 ? data[0].points : 1
+
   return (
     <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-5 transition-all duration-300 hover:border-[#c9a55c]">
       <div className="flex items-center gap-2 mb-4">
@@ -66,23 +39,41 @@ function HorizontalBarChart({ title, icon, data, color, subtitle }: ChartProps) 
 
       {/* Custom Bar List */}
       <div className="space-y-2 mt-3">
-        {data.map((item, index) => (
-          <div key={index} className="grid grid-cols-[30px_1fr_70px] gap-2 items-center group">
-            <span className="text-gray-500 text-sm">{index + 1}</span>
-            <div className="flex items-center gap-2">
-              <div 
-                className="h-4 rounded-r transition-all duration-300 group-hover:opacity-80"
-                style={{ 
-                  width: `${(item.points / data[0].points) * 100}%`,
-                  backgroundColor: color,
-                  minWidth: '20px'
-                }}
-              />
-              <span className="text-gray-400 text-xs whitespace-nowrap">{item.name}</span>
+        {isLoading ? (
+          [...Array(10)].map((_, i) => (
+            <div key={i} className="grid grid-cols-[30px_1fr_70px] gap-2 items-center">
+              <Skeleton className="w-5 h-4 bg-[#2a2a2a]" />
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-4 bg-[#2a2a2a]" style={{ width: `${100 - i * 8}%` }} />
+              </div>
+              <Skeleton className="w-10 h-4 bg-[#2a2a2a] ml-auto" />
             </div>
-            <span className="text-white text-sm text-right font-medium">{item.points}</span>
+          ))
+        ) : data.length === 0 ? (
+          <div className="text-center py-4 text-gray-500 text-sm">
+            Nenhum dado disponível
           </div>
-        ))}
+        ) : (
+          data.map((item, index) => (
+            <div key={index} className="grid grid-cols-[30px_1fr_70px] gap-2 items-center group">
+              <span className="text-gray-500 text-sm">{index + 1}</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="h-4 rounded-r transition-all duration-300 group-hover:opacity-80"
+                  style={{ 
+                    width: `${(item.points / maxPoints) * 100}%`,
+                    backgroundColor: color,
+                    minWidth: '20px'
+                  }}
+                />
+                <span className="text-gray-400 text-xs whitespace-nowrap truncate">{item.name}</span>
+              </div>
+              <span className="text-white text-sm text-right font-medium">
+                {Math.round(item.points).toLocaleString('pt-BR')}
+              </span>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Legend */}
@@ -95,6 +86,19 @@ function HorizontalBarChart({ title, icon, data, color, subtitle }: ChartProps) 
 }
 
 export function TopCharts() {
+  const { ranking: rankingGeral, isLoading: isLoadingGeral } = useRanking()
+  const { ranking: rankingDiario, isLoading: isLoadingDiario } = useRankingDiario()
+
+  const maioresPontosData: ChartData[] = rankingGeral.slice(0, 10).map(p => ({
+    name: p.usuario,
+    points: p.total
+  }))
+
+  const ultimosPontosData: ChartData[] = rankingDiario.slice(0, 10).map(p => ({
+    name: p.usuario,
+    points: p.total
+  }))
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       <HorizontalBarChart
@@ -103,13 +107,15 @@ export function TopCharts() {
         data={maioresPontosData}
         color="#c9a55c"
         subtitle="Pontuação geral - Top 10"
+        isLoading={isLoadingGeral}
       />
       <HorizontalBarChart
-        title="Top 10 Geral - Últimos Pontos"
+        title="Top 10 Diário - Pontos Hoje"
         icon={<Clock className="w-5 h-5 text-[#c9a55c]" />}
         data={ultimosPontosData}
         color="#c9a55c"
-        subtitle="Últimos pontos acumulados"
+        subtitle="Pontos registrados hoje"
+        isLoading={isLoadingDiario}
       />
     </div>
   )
