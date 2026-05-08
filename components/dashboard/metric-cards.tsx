@@ -1,58 +1,35 @@
 "use client"
 
-import { Swords, Trophy, Flag, Users } from "lucide-react"
+import { useEffect, useState } from "react"
+import { getDashboard } from "@/lib/api"
 
-const metrics = [
-  {
-    icon: Swords,
-    label: "VS HOJE",
-    value: "142",
-    subtitle: "Confrontos registrados",
-    iconColor: "text-[#c9a55c]",
-  },
-  {
-    icon: Trophy,
-    label: "VS SEMANA",
-    value: "1.842",
-    subtitle: "Pontos acumulados",
-    iconColor: "text-[#c9a55c]",
-  },
-  {
-    icon: Flag,
-    label: "F1 SEMANAL",
-    value: "1.256",
-    subtitle: "Pontos acumulados",
-    iconColor: "text-[#3b82f6]",
-  },
-  {
-    icon: Users,
-    label: "JOGADORES",
-    value: "327",
-    subtitle: "Ativos na comunidade",
-    iconColor: "text-[#3b82f6]",
-  },
-]
+export function StatsCards() {
+  const [data, setData] = useState<any>(null)
 
-export function MetricCards() {
+  useEffect(() => {
+    async function load() {
+      const result = await getDashboard()
+      setData(result)
+    }
+
+    load()
+  }, [])
+
+  if (!data) return <p>Carregando...</p>
+
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {metrics.map((metric) => (
-        <div
-          key={metric.label}
-          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 transition-all duration-300 hover:border-[#c9a55c] hover:shadow-lg hover:shadow-[#c9a55c]/10 group"
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <metric.icon className={`w-5 h-5 ${metric.iconColor} ${metric.iconColor.includes('c9a55c') ? 'drop-shadow-[0_0_8px_rgba(201,165,92,0.8)] filter' : 'drop-shadow-[0_0_6px_rgba(59,130,246,0.6)] filter'}`} />
-            <span className="text-xs text-gray-400 uppercase tracking-wide">
-              {metric.label}
-            </span>
-          </div>
-          <p className="text-3xl font-bold text-white group-hover:text-[#c9a55c] transition-colors">
-            {metric.value}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">{metric.subtitle}</p>
-        </div>
-      ))}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+      <div className="bg-zinc-900 p-4 rounded-xl">
+        <p>VS HOJE</p>
+        <h2 className="text-2xl font-bold">{data.hoje}</h2>
+      </div>
+
+      <div className="bg-zinc-900 p-4 rounded-xl">
+        <p>TOTAL VS</p>
+        <h2 className="text-2xl font-bold">{data.total}</h2>
+      </div>
+
     </div>
   )
 }
