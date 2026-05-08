@@ -81,7 +81,7 @@ export function Footer() {
           <span className="text-gray-600 text-xs">developed by</span>
           <div className="flex items-center gap-1">
             <Crown className="w-4 h-4 text-[#c9a55c]" />
-            <span className="text-[#c9a55c] font-bold text-sm tracking-wider">PREDADOR 『PRΞDΔDΩR』</span>
+            <span className="text-[#c9a55c] font-bold text-sm tracking-wider">『PRΞDΔDΩR』</span>
           </div>
         </div>
       </div>
