@@ -23,35 +23,48 @@ export function TopRanking() {
     load()
   }, [])
 
+  // 🔥 FORMATAÇÃO CORRETA (INTELIGENTE)
   function formatarNumero(valor: number) {
-    return valor.toFixed(2) + "M"
+    if (valor >= 1_000_000) {
+      return (valor / 1_000_000).toFixed(2) + "M"
+    }
+    if (valor >= 1_000) {
+      return (valor / 1_000).toFixed(1) + "K"
+    }
+    return valor.toString()
   }
 
   return (
-    <div className="bg-zinc-900 p-4 rounded-2xl">
-      <h2 className="text-xl font-bold mb-4">TOP 10 GERAL</h2>
+    <div className="bg-zinc-900/80 backdrop-blur p-6 rounded-2xl border border-zinc-800">
+      <h2 className="text-lg font-semibold mb-4 text-white">
+        TOP 10 GERAL
+      </h2>
 
       {loading ? (
-        <p>Carregando...</p>
+        <p className="text-zinc-400">Carregando...</p>
       ) : (
-        <table className="w-full text-left">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jogador</th>
-              <th>Pontos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {players.map((player, index) => (
-              <tr key={player.discord_id}>
-                <td>{index + 1}</td>
-                <td>{player.usuario}</td>
-                <td>{formatarNumero(player.total)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="space-y-3">
+          {players.map((player, index) => (
+            <div
+              key={player.discord_id}
+              className="flex items-center justify-between bg-zinc-950 px-4 py-3 rounded-xl border border-zinc-800"
+            >
+              <div className="flex items-center gap-4">
+                <span className="text-zinc-400 w-4">
+                  {index + 1}
+                </span>
+
+                <span className="text-white font-medium">
+                  {player.usuario}
+                </span>
+              </div>
+
+              <span className="text-blue-400 font-semibold">
+                {formatarNumero(player.total)}
+              </span>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   )
