@@ -23,7 +23,7 @@ export interface RecentRecord {
   avatar_url?: string
 }
 
-// Formata pontos no formato abreviado (ex: 37.20M, 1.50K)
+// Formata pontos (37.20M, 1.50K...)
 export function formatPoints(value: number): string {
   if (value >= 1_000_000_000) {
     return `${(value / 1_000_000_000).toFixed(2)}B`
@@ -37,7 +37,7 @@ export function formatPoints(value: number): string {
   return value.toFixed(0)
 }
 
-// Formata tempo relativo (ex: "há 2 minutos")
+// Tempo relativo
 export function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString)
   const now = new Date()
@@ -53,8 +53,9 @@ export function formatRelativeTime(dateString: string): string {
 
 export async function fetchRanking(period?: "day" | "all"): Promise<RankingPlayer[]> {
   const url = period ? `${API_URL}/ranking?period=${period}` : `${API_URL}/ranking`
+  
   const response = await fetch(url, {
-    next: { revalidate: 30 }, // Cache por 30 segundos
+    next: { revalidate: 30 },
   })
   
   if (!response.ok) {
@@ -70,7 +71,7 @@ export async function fetchDashboard(): Promise<DashboardData> {
   })
   
   if (!response.ok) {
-    throw new Error("Erro ao buscar dados do dashboard")
+    throw new Error("Erro ao buscar dashboard")
   }
   
   return response.json()
@@ -82,18 +83,20 @@ export async function fetchRecentRecords(): Promise<RecentRecord[]> {
   })
   
   if (!response.ok) {
-    throw new Error("Erro ao buscar últimos registros")
+    throw new Error("Erro ao buscar registros")
   }
   
   return response.json()
 }
 
-// Função para uso client-side com SWR
+// SWR / client
 export const fetcher = async (url: string) => {
   const response = await fetch(url)
+  
   if (!response.ok) {
     throw new Error("Erro na requisição")
   }
+  
   return response.json()
 }
 

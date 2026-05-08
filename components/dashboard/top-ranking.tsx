@@ -25,22 +25,11 @@ export function TopRanking() {
   const top10 = ranking.slice(0, 10)
 
   return (
-    <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-5 h-full transition-all duration-300 hover:border-[#c9a55c]">
-      <div className="flex items-center gap-2 mb-4">
-        <Trophy className="w-5 h-5 text-[#c9a55c]" />
-        <h3 className="text-white font-semibold uppercase tracking-wide text-sm">
-          Top 10 Geral
-        </h3>
-      </div>
+    <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-[#2a2a2a]">
+      <h2 className="text-lg font-semibold mb-4 text-white">
+        🏆 TOP 10 GERAL
+      </h2>
 
-      {/* Header */}
-      <div className="grid grid-cols-[40px_1fr_80px] gap-2 text-xs text-gray-500 uppercase tracking-wide pb-2 border-b border-[#2a2a2a]">
-        <span className="text-center">#</span>
-        <span>Jogador</span>
-        <span className="text-right">Pontos</span>
-      </div>
-
-      {/* List */}
       <div className="space-y-1 mt-2">
         {isLoading ? (
           [...Array(10)].map((_, i) => (
@@ -65,6 +54,7 @@ export function TopRanking() {
           top10.map((player, index) => {
             const position = index + 1
             const isTop = position === 1
+
             return (
               <div
                 key={`${player.discord_id || player.usuario}-${index}`}
@@ -73,19 +63,26 @@ export function TopRanking() {
                 <span className={`text-center font-bold ${getPositionColor(position)}`}>
                   {position}
                 </span>
+
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center">
                     <User className="w-4 h-4 text-gray-500" />
                   </div>
+
                   <span className="text-white text-sm group-hover:text-[#c9a55c] transition-colors truncate">
                     {player.usuario}
                   </span>
-                  {isTop && <Crown className="w-4 h-4 text-[#c9a55c] flex-shrink-0" />}
+
+                  {isTop && (
+                    <Crown className="w-4 h-4 text-[#c9a55c] flex-shrink-0" />
+                  )}
                 </div>
+
                 <div className="flex items-center justify-end gap-1">
                   <span className={`font-bold text-sm ${isTop ? "text-[#c9a55c]" : "text-white"}`}>
                     {formatPoints(player.total)}
                   </span>
+
                   <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-[#c9a55c] transition-colors" />
                 </div>
               </div>
@@ -94,7 +91,6 @@ export function TopRanking() {
         )}
       </div>
 
-      {/* View All Button */}
       <button className="w-full mt-4 py-2 border border-[#2a2a2a] rounded-md text-gray-400 text-sm hover:border-[#c9a55c] hover:text-[#c9a55c] transition-all duration-200">
         VER RANKING COMPLETO
       </button>
