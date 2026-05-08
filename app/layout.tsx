@@ -1,11 +1,18 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Rajdhani, Roboto } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const inter = Inter({ 
+const rajdhani = Rajdhani({ 
   subsets: ["latin"],
-  variable: '--font-inter'
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-rajdhani'
+});
+
+const roboto = Roboto({ 
+  subsets: ["latin"],
+  weight: ['300', '400', '500', '700'],
+  variable: '--font-roboto'
 });
 
 export const metadata: Metadata = {
@@ -21,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="bg-[#0d0d0d]">
-      <body className={`${inter.variable} font-sans antialiased bg-[#0d0d0d] text-white`}>
+      <body className={`${rajdhani.variable} ${roboto.variable} font-sans antialiased bg-[#0d0d0d] text-white`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
