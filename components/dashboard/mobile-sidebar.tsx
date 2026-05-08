@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { 
   Home, 
   Trophy, 
@@ -9,7 +8,8 @@ import {
   Flag, 
   Crown, 
   Clock, 
-  Users,
+  Users, 
+  Settings,
   X 
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -23,6 +23,7 @@ const navItems = [
   { icon: Crown, label: "MVP da Semana", active: false },
   { icon: Clock, label: "Histórico", active: false },
   { icon: Users, label: "Jogadores", active: false },
+  { icon: Settings, label: "Configurações", active: false },
 ]
 
 interface MobileSidebarProps {
@@ -53,15 +54,12 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
         {/* Logo */}
         <div className="p-6 flex flex-col items-center border-b border-[#2a2a2a]">
-          <div className="relative w-28 h-28 drop-shadow-[0_0_15px_rgba(201,165,92,0.4)]">
-            <Image
-              src="/logo.png"
-              alt="ELO SUPREMO"
-              fill
-              className="object-contain brightness-110 contrast-110 saturate-125"
-              priority
-            />
+          <div className="relative">
+            <Crown className="w-14 h-14 text-[#c9a55c]" />
+            <Swords className="w-7 h-7 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
           </div>
+          <h1 className="text-3xl font-bold text-[#c9a55c] mt-2">SVS</h1>
+          <span className="text-sm text-red-500 font-semibold tracking-wider">DARK WAR</span>
         </div>
 
         {/* Navigation */}
