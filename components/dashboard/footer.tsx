@@ -31,7 +31,7 @@ export function Footer() {
               <Swords className="w-4 h-4 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
-              Dashboard oficial do SVS - Dark War. Acompanhe rankings, estatísticas e desempenho dos melhores jogadores!
+              Dashboard oficial da ΞLØ - Dark War. Acompanhe rankings, estatísticas e desempenho dos melhores jogadores!
             </p>
           </div>
         </div>
@@ -81,7 +81,7 @@ export function Footer() {
           <span className="text-gray-600 text-xs">developed by</span>
           <div className="flex items-center gap-1">
             <Crown className="w-4 h-4 text-[#c9a55c]" />
-            <span className="text-[#c9a55c] font-bold text-sm tracking-wider">PREDADOR</span>
+            <span className="text-[#c9a55c] font-bold text-sm tracking-wider">『PRΞDΔDΩR』</span>
           </div>
         </div>
       </div>
