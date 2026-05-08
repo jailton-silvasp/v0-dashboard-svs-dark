@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getRanking } from "@/lib/api"
 
 type Player = {
   usuario: string
@@ -15,15 +14,24 @@ export function TopRanking() {
 
   useEffect(() => {
     async function load() {
-      const data = await getRanking()
-      setPlayers(data)
-      setLoading(false)
+      try {
+        const response = await fetch(
+          "https://api-svs-production.up.railway.app/ranking"
+        )
+
+        const data = await response.json()
+        setPlayers(data)
+
+      } catch (error) {
+        console.error("Erro:", error)
+      } finally {
+        setLoading(false)
+      }
     }
 
     load()
   }, [])
 
-  // 🔥 FORMATAÇÃO CORRETA (INTELIGENTE)
   function formatarNumero(valor: number) {
     if (valor >= 1_000_000) {
       return (valor / 1_000_000).toFixed(2) + "M"
@@ -35,7 +43,7 @@ export function TopRanking() {
   }
 
   return (
-    <div className="bg-zinc-900/80 backdrop-blur p-6 rounded-2xl border border-zinc-800">
+    <div className="bg-zinc-900/80 p-6 rounded-2xl border border-zinc-800">
       <h2 className="text-lg font-semibold mb-4 text-white">
         TOP 10 GERAL
       </h2>
