@@ -42,7 +42,7 @@ export function MetricCards() {
           className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 transition-all duration-300 hover:border-[#c9a55c] hover:shadow-lg hover:shadow-[#c9a55c]/10 group"
         >
           <div className="flex items-center gap-2 mb-2">
-            <metric.icon className={`w-5 h-5 ${metric.iconColor}`} />
+            <metric.icon className={`w-5 h-5 ${metric.iconColor} ${metric.iconColor.includes('c9a55c') ? 'drop-shadow-[0_0_8px_rgba(201,165,92,0.8)] filter' : 'drop-shadow-[0_0_6px_rgba(59,130,246,0.6)] filter'}`} />
             <span className="text-xs text-gray-400 uppercase tracking-wide">
               {metric.label}
             </span>
