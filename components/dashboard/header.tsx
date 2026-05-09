@@ -1,17 +1,12 @@
 "use client"
 
-import { Calendar, Users, Crown, Swords, Menu } from "lucide-react"
+import { Calendar, Crown, Swords } from "lucide-react"
 import { useState, useEffect } from "react"
 
-interface HeaderProps {
-  onMenuClick?: () => void
-}
-
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header() {
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
 
   useEffect(() => {
-    // Inicializa apenas no cliente para evitar erro de hidratação
     setCurrentTime(new Date())
     const timer = setInterval(() => {
       setCurrentTime(new Date())
@@ -38,34 +33,34 @@ export function Header({ onMenuClick }: HeaderProps) {
   return (
     <header className="flex items-center justify-between pb-6 border-b border-[#2a2a2a] mb-6">
       <div className="flex items-center gap-4">
-        {/* Mobile menu button */}
-        <button 
-          onClick={onMenuClick}
-          className="lg:hidden p-2 text-gray-400 hover:text-[#c9a55c] transition-colors"
-        >
-          <Menu className="w-6 h-6" />
-        </button>
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <Crown className="w-10 h-10 text-[#c9a55c]" />
+            <Swords className="w-5 h-5 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-[#c9a55c] tracking-wide">SVS</h1>
+            <span className="text-[10px] text-red-500 font-semibold tracking-wider">{"ΞLØ - S U P R Ξ M Ø"}</span>
+          </div>
+        </div>
         
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-wide">DASHBOARD</h1>
-          <p className="text-gray-500 text-sm">Acompanhe o desempenho dos jogadores em tempo real.</p>
+        <div className="hidden sm:block h-10 w-px bg-[#2a2a2a] mx-2" />
+        
+        <div className="hidden sm:block">
+          <h2 className="text-xl font-bold text-white tracking-wide">DASHBOARD</h2>
+          <p className="text-gray-500 text-xs">Acompanhe o desempenho dos jogadores em tempo real.</p>
         </div>
       </div>
 
       <div className="flex items-center gap-4">
         {/* Date/Time */}
-        <div className="hidden sm:flex items-center gap-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2">
+        <div className="flex items-center gap-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2">
           <Calendar className="w-4 h-4 text-gray-500" />
           <div className="text-right">
-            <p className="text-white text-sm">{currentTime ? formatDate(currentTime) : "--"}</p>
+            <p className="text-white text-sm hidden sm:block">{currentTime ? formatDate(currentTime) : "--"}</p>
             <p className="text-[#c9a55c] text-xs font-mono">{currentTime ? formatTime(currentTime) : "--:--:--"}</p>
           </div>
-        </div>
-
-        {/* Logo */}
-        <div className="flex items-center gap-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2">
-          <Users className="w-5 h-5 text-[#3b82f6]" />
-          <span className="text-white font-bold">SVS</span>
         </div>
       </div>
     </header>

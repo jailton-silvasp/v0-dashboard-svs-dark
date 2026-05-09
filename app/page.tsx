@@ -1,8 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Sidebar } from "@/components/dashboard/sidebar"
-import { MobileSidebar } from "@/components/dashboard/mobile-sidebar"
 import { Header } from "@/components/dashboard/header"
 import { MetricCards } from "@/components/dashboard/metric-cards"
 import { MVPCard } from "@/components/dashboard/mvp-card"
@@ -13,28 +11,15 @@ import { WeeklyCharts } from "@/components/dashboard/weekly-charts"
 import { Footer } from "@/components/dashboard/footer"
 
 export default function Dashboard() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] flex">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <div className="fixed left-0 top-0 h-screen">
-          <Sidebar />
-        </div>
-      </div>
-
-      {/* Mobile Sidebar */}
-      <MobileSidebar 
-        isOpen={isMobileMenuOpen} 
-        onClose={() => setIsMobileMenuOpen(false)} 
-      />
-
+    <div className="min-h-screen bg-[#0d0d0d]">
       {/* Main Content */}
-      <main className="flex-1 lg:ml-[200px] p-4 sm:p-6 lg:p-8 overflow-x-hidden">
-        <div className="max-w-[1400px] mx-auto">
+      <main className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
+        <div className="max-w-[1600px] mx-auto">
           {/* Header */}
-          <Header onMenuClick={() => setIsMobileMenuOpen(true)} />
+          <Header />
 
           {/* Metric Cards */}
           <MetricCards />
@@ -44,7 +29,7 @@ export default function Dashboard() {
             {/* Left Column: MVP + VS Diário */}
             <div className="space-y-4">
               <MVPCard />
-              <VsDiarioFilter />
+              <VsDiarioFilter onDateChange={setSelectedDate} />
             </div>
 
             {/* Right Column: Top Ranking */}
@@ -55,7 +40,7 @@ export default function Dashboard() {
 
           {/* Top 10 Charts */}
           <div className="mt-6">
-            <TopCharts />
+            <TopCharts selectedDate={selectedDate} />
           </div>
 
           {/* Weekly Charts */}

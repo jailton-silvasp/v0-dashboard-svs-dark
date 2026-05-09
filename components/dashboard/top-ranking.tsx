@@ -1,7 +1,7 @@
 "use client"
 
-import { Trophy, Crown, User, ChevronRight } from "lucide-react"
-import Image from "next/image"
+import { Trophy, Crown, User, ChevronRight, X } from "lucide-react"
+import { useState } from "react"
 import { useRanking } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -20,91 +20,210 @@ function getPositionBg(position: number) {
   return ""
 }
 
+interface RankingModalProps {
+  isOpen: boolean
+  onClose: () => void
+  ranking: Array<{
+    discord_id?: string
+    usuario: string
+    avatar_url?: string
+    total: number
+  }>
+}
+
+function RankingModal({ isOpen, onClose, ranking }: RankingModalProps) {
+  if (!isOpen) return null
+
+  return (
+    <>
+      {/* Overlay */}
+      <div 
+        className="fixed inset-0 bg-black/70 z-50"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div className="fixed inset-4 sm:inset-10 md:inset-20 lg:inset-y-10 lg:inset-x-40 bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl z-50 flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#2a2a2a]">
+          <div className="flex items-center gap-3">
+            <Trophy className="w-6 h-6 text-[#c9a55c]" />
+            <h2 className="text-lg sm:text-xl font-bold text-white">RANKING COMPLETO</h2>
+          </div>
+          <button 
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-[#c9a55c] transition-colors rounded-lg hover:bg-[#2a2a2a]"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Table Header */}
+        <div className="grid grid-cols-[50px_1fr_100px] sm:grid-cols-[60px_1fr_120px] gap-2 px-4 sm:px-6 py-3 text-xs text-gray-500 uppercase tracking-wide border-b border-[#2a2a2a] bg-[#0d0d0d]">
+          <span className="text-center">#</span>
+          <span>Jogador</span>
+          <span className="text-right">Pontos</span>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="divide-y divide-[#2a2a2a]">
+            {ranking.map((player, index) => {
+              const position = index + 1
+              const isTop = position === 1
+
+              return (
+                <div
+                  key={`${player.discord_id || player.usuario}-${index}`}
+                  className={`grid grid-cols-[50px_1fr_100px] sm:grid-cols-[60px_1fr_120px] gap-2 items-center px-4 sm:px-6 py-3 hover:bg-[#2a2a2a] transition-colors ${getPositionBg(position)}`}
+                >
+                  <span className={`text-center font-bold text-sm ${getPositionColor(position)}`}>
+                    {position}
+                  </span>
+
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden flex-shrink-0">
+                      {player.avatar_url ? (
+                        <img
+                          src={player.avatar_url}
+                          alt={player.usuario}
+                          width={32}
+                          height={32}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <User className="w-4 h-4 text-gray-500" />
+                      )}
+                    </div>
+
+                    <span className="text-white text-sm truncate">
+                      {player.usuario}
+                    </span>
+
+                    {isTop && (
+                      <Crown className="w-4 h-4 text-[#c9a55c] flex-shrink-0" />
+                    )}
+                  </div>
+
+                  <span className={`font-bold text-sm text-right ${isTop ? "text-[#c9a55c]" : "text-white"}`}>
+                    {formatPoints(player.total)}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 sm:p-6 border-t border-[#2a2a2a] bg-[#0d0d0d]">
+          <p className="text-center text-gray-500 text-sm">
+            Total de {ranking.length} jogadores no ranking
+          </p>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export function TopRanking() {
   const { ranking, isLoading, isError } = useRanking()
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const top10 = ranking.slice(0, 10)
 
   return (
-    <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-[#2a2a2a]">
-      <h2 className="text-lg font-semibold mb-4 text-white">
-        🏆 TOP 10 GERAL
-      </h2>
+    <>
+      <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-[#2a2a2a]">
+        <h2 className="text-lg font-semibold mb-4 text-white flex items-center gap-2">
+          <Trophy className="w-5 h-5 text-[#c9a55c]" />
+          TOP 10 GERAL
+        </h2>
 
-      <div className="space-y-1 mt-2">
-        {isLoading ? (
-          [...Array(10)].map((_, i) => (
-            <div key={i} className="grid grid-cols-[40px_1fr_80px] gap-2 items-center py-2 px-1">
-              <Skeleton className="w-6 h-6 rounded bg-[#2a2a2a] mx-auto" />
-              <div className="flex items-center gap-2">
-                <Skeleton className="w-7 h-7 rounded-full bg-[#2a2a2a]" />
-                <Skeleton className="w-24 h-4 bg-[#2a2a2a]" />
-              </div>
-              <Skeleton className="w-12 h-4 bg-[#2a2a2a] ml-auto" />
-            </div>
-          ))
-        ) : isError ? (
-          <div className="text-center py-8 text-gray-500">
-            Erro ao carregar ranking
-          </div>
-        ) : top10.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            Nenhum jogador no ranking
-          </div>
-        ) : (
-          top10.map((player, index) => {
-            const position = index + 1
-            const isTop = position === 1
-
-            return (
-              <div
-                key={`${player.discord_id || player.usuario}-${index}`}
-                className={`grid grid-cols-[40px_1fr_80px] gap-2 items-center py-2 px-1 rounded transition-all duration-200 hover:bg-[#2a2a2a] cursor-pointer group ${getPositionBg(position)}`}
-              >
-                <span className={`text-center font-bold ${getPositionColor(position)}`}>
-                  {position}
-                </span>
-
+        <div className="space-y-1 mt-2">
+          {isLoading ? (
+            [...Array(10)].map((_, i) => (
+              <div key={i} className="grid grid-cols-[40px_1fr_80px] gap-2 items-center py-2 px-1">
+                <Skeleton className="w-6 h-6 rounded bg-[#2a2a2a] mx-auto" />
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden">
-                    {player.avatar_url ? (
-                      <Image
-                        src={player.avatar_url}
-                        alt={player.usuario}
-                        width={28}
-                        height={28}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <User className="w-4 h-4 text-gray-500" />
+                  <Skeleton className="w-7 h-7 rounded-full bg-[#2a2a2a]" />
+                  <Skeleton className="w-24 h-4 bg-[#2a2a2a]" />
+                </div>
+                <Skeleton className="w-12 h-4 bg-[#2a2a2a] ml-auto" />
+              </div>
+            ))
+          ) : isError ? (
+            <div className="text-center py-8 text-gray-500">
+              Erro ao carregar ranking
+            </div>
+          ) : top10.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              Nenhum jogador no ranking
+            </div>
+          ) : (
+            top10.map((player, index) => {
+              const position = index + 1
+              const isTop = position === 1
+
+              return (
+                <div
+                  key={`${player.discord_id || player.usuario}-${index}`}
+                  className={`grid grid-cols-[40px_1fr_80px] gap-2 items-center py-2 px-1 rounded transition-all duration-200 hover:bg-[#2a2a2a] cursor-pointer group ${getPositionBg(position)}`}
+                >
+                  <span className={`text-center font-bold ${getPositionColor(position)}`}>
+                    {position}
+                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden">
+                      {player.avatar_url ? (
+                        <img
+                          src={player.avatar_url}
+                          alt={player.usuario}
+                          width={28}
+                          height={28}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <User className="w-4 h-4 text-gray-500" />
+                      )}
+                    </div>
+
+                    <span className="text-white text-sm group-hover:text-[#c9a55c] transition-colors truncate">
+                      {player.usuario}
+                    </span>
+
+                    {isTop && (
+                      <Crown className="w-4 h-4 text-[#c9a55c] flex-shrink-0" />
                     )}
                   </div>
 
-                  <span className="text-white text-sm group-hover:text-[#c9a55c] transition-colors truncate">
-                    {player.usuario}
-                  </span>
+                  <div className="flex items-center justify-end gap-1">
+                    <span className={`font-bold text-sm ${isTop ? "text-[#c9a55c]" : "text-white"}`}>
+                      {formatPoints(player.total)}
+                    </span>
 
-                  {isTop && (
-                    <Crown className="w-4 h-4 text-[#c9a55c] flex-shrink-0" />
-                  )}
+                    <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-[#c9a55c] transition-colors" />
+                  </div>
                 </div>
+              )
+            })
+          )}
+        </div>
 
-                <div className="flex items-center justify-end gap-1">
-                  <span className={`font-bold text-sm ${isTop ? "text-[#c9a55c]" : "text-white"}`}>
-                    {formatPoints(player.total)}
-                  </span>
-
-                  <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-[#c9a55c] transition-colors" />
-                </div>
-              </div>
-            )
-          })
-        )}
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          disabled={ranking.length === 0}
+          className="w-full mt-4 py-2 border border-[#2a2a2a] rounded-md text-gray-400 text-sm hover:border-[#c9a55c] hover:text-[#c9a55c] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          VER RANKING COMPLETO
+        </button>
       </div>
 
-      <button className="w-full mt-4 py-2 border border-[#2a2a2a] rounded-md text-gray-400 text-sm hover:border-[#c9a55c] hover:text-[#c9a55c] transition-all duration-200">
-        VER RANKING COMPLETO
-      </button>
-    </div>
+      <RankingModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        ranking={ranking}
+      />
+    </>
   )
 }

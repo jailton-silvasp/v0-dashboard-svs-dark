@@ -2,7 +2,7 @@
 
 import { Crown, Swords, Info, Terminal, Clock } from "lucide-react"
 import { useRecentRecords } from "@/hooks/use-api"
-import { formatPoints, formatRelativeTime } from "@/lib/api"
+import { formatPoints, formatBrazilTime } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const commands = [
@@ -30,7 +30,7 @@ export function Footer() {
               <Swords className="w-4 h-4 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
-              Dashboard oficial da ELO - Dark War. Acompanhe rankings, estatísticas e desempenho dos melhores jogadores!
+              {"Dashboard oficial ΞLØ - S U P R Ξ M Ø. Acompanhe rankings, estatísticas e desempenho dos melhores jogadores!"}
             </p>
           </div>
         </div>
@@ -78,7 +78,7 @@ export function Footer() {
                     <p className="text-gray-400 group-hover:text-white transition-colors">
                       {record.usuario} registrou {formatPoints(record.valor)} pontos
                     </p>
-                    <p className="text-gray-600">{formatRelativeTime(record.criado_em)}</p>
+                    <p className="text-gray-600">{formatBrazilTime(record.criado_em)}</p>
                   </div>
                 </div>
               ))
