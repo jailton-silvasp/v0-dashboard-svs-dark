@@ -2,12 +2,12 @@
 
 import { Crown, User } from "lucide-react"
 
-import { useRanking } from "@/hooks/use-api"
+import { useVsSemanal } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export function MVPCard() {
-  const { ranking, isLoading, isError } = useRanking()
+  const { ranking, isLoading, isError } = useVsSemanal()
 
   const mvp = ranking.length > 0 ? ranking[0] : null
 

@@ -32,7 +32,7 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
       <div className="flex items-center gap-2 mb-4">
         <Swords className="w-5 h-5 text-[#c9a55c]" />
         <h3 className="text-white font-semibold uppercase tracking-wide text-sm">
-          VS Diario
+          VS Diário
         </h3>
       </div>
 
@@ -74,7 +74,7 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
             </div>
           ) : ranking.length === 0 ? (
             <p className="text-gray-500 text-sm text-center py-4">
-              Nenhum registro encontrado
+              Nenhum registro encontrado para esta data
             </p>
           ) : (
             <div className="space-y-2">
