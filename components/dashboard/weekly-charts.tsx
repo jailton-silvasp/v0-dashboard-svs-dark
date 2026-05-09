@@ -140,11 +140,15 @@ export function WeeklyCharts() {
   const { ranking: vsSemanal, isLoading: isLoadingVs } = useVsSemanal()
   const { ranking: f1Semanal, isLoading: isLoadingF1 } = useF1Semanal()
 
+  // VS: soma semanal de todas as marcações
   const vsData: ChartData[] = vsSemanal.slice(0, 10).map(p => ({
     name: p.usuario,
     points: p.total
   }))
 
+  // F1: última marcação da semana (não soma, exibe valor mais recente)
+  // Nota: A API /ranking/semanal?tipo=f1 deve retornar o último valor registrado,
+  // não a soma de todas as marcações da semana
   const f1Data: ChartData[] = f1Semanal.slice(0, 10).map(p => ({
     name: p.usuario,
     points: p.total
@@ -165,7 +169,7 @@ export function WeeklyCharts() {
         icon={<Flag className="w-5 h-5 text-[#3b82f6]" />}
         data={f1Data}
         color="#3b82f6"
-        subtitle="Pontuação semanal de F1"
+        subtitle="Última marcação de F1 da semana"
         isLoading={isLoadingF1}
       />
     </div>

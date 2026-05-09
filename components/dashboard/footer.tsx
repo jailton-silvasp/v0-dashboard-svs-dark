@@ -1,9 +1,10 @@
 "use client"
 
-import { Crown, Swords, Info, Terminal, Clock } from "lucide-react"
+import { Swords, Info, Terminal, Clock, Crown } from "lucide-react"
 import { useRecentRecords } from "@/hooks/use-api"
 import { formatPoints, formatBrazilTime } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import Image from "next/image"
 
 const commands = [
   { cmd: "!vs", desc: "Registra sua pontuação no VS" },
@@ -25,9 +26,13 @@ export function Footer() {
             <h4 className="text-white font-semibold uppercase tracking-wide text-xs">Sobre</h4>
           </div>
           <div className="flex items-start gap-3">
-            <div className="relative shrink-0">
-              <Crown className="w-8 h-8 text-[#c9a55c]" />
-              <Swords className="w-4 h-4 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
+            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#c9a55c] bg-[#0d0d0d] shrink-0">
+              <Image
+                src="/logo-elo-supremo.png"
+                alt="ELO Supremo"
+                fill
+                className="object-cover scale-[1.35]"
+              />
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
               {"Dashboard oficial ΞLØ - S U P R Ξ M Ø. Acompanhe rankings, estatísticas e desempenho dos melhores jogadores!"}

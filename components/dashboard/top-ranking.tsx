@@ -1,10 +1,45 @@
 "use client"
 
-import { Trophy, Crown, User, ChevronRight, X } from "lucide-react"
-import { useState } from "react"
-import { useRanking } from "@/hooks/use-api"
+import { Trophy, Crown, User, ChevronRight, X, Calendar } from "lucide-react"
+import { useState, useEffect } from "react"
+import { useRankingSemanalGeral } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+
+// Calcula a data de reset da semana (domingo às 00:00 horário do servidor = sábado 23:00 Brasil)
+function getWeekResetInfo(): { daysLeft: number; resetDate: string } {
+  const now = new Date()
+  // Ajusta para timezone Brasil (UTC-3)
+  const brasilOffset = -3 * 60
+  const localOffset = now.getTimezoneOffset()
+  const brasilNow = new Date(now.getTime() + (localOffset + brasilOffset) * 60000)
+  
+  const dayOfWeek = brasilNow.getDay() // 0 = domingo, 6 = sábado
+  const hour = brasilNow.getHours()
+  
+  // Se for sábado após 23h, conta como novo ciclo (0 dias restantes)
+  let daysUntilSaturday23h: number
+  if (dayOfWeek === 6 && hour >= 23) {
+    daysUntilSaturday23h = 7 // próximo sábado
+  } else if (dayOfWeek === 6) {
+    daysUntilSaturday23h = 0 // ainda é sábado antes das 23h
+  } else {
+    // Dias até sábado
+    daysUntilSaturday23h = (6 - dayOfWeek)
+  }
+  
+  const resetDate = new Date(brasilNow)
+  resetDate.setDate(resetDate.getDate() + daysUntilSaturday23h)
+  resetDate.setHours(23, 0, 0, 0)
+  
+  const resetDateStr = resetDate.toLocaleDateString('pt-BR', { 
+    weekday: 'short', 
+    day: '2-digit', 
+    month: '2-digit' 
+  })
+  
+  return { daysLeft: daysUntilSaturday23h, resetDate: resetDateStr }
+}
 
 function getPositionColor(position: number) {
   if (position === 1) return "text-[#c9a55c]"
@@ -48,7 +83,7 @@ function RankingModal({ isOpen, onClose, ranking }: RankingModalProps) {
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#2a2a2a]">
           <div className="flex items-center gap-3">
             <Trophy className="w-6 h-6 text-[#c9a55c]" />
-            <h2 className="text-lg sm:text-xl font-bold text-white">RANKING COMPLETO</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-white">RANKING SEMANAL COMPLETO</h2>
           </div>
           <button 
             onClick={onClose}
@@ -126,18 +161,37 @@ function RankingModal({ isOpen, onClose, ranking }: RankingModalProps) {
 }
 
 export function TopRanking() {
-  const { ranking, isLoading, isError } = useRanking()
+  const { ranking, isLoading, isError } = useRankingSemanalGeral()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [resetInfo, setResetInfo] = useState<{ daysLeft: number; resetDate: string } | null>(null)
+
+  useEffect(() => {
+    setResetInfo(getWeekResetInfo())
+    // Atualiza a cada minuto
+    const interval = setInterval(() => {
+      setResetInfo(getWeekResetInfo())
+    }, 60000)
+    return () => clearInterval(interval)
+  }, [])
 
   const top10 = ranking.slice(0, 10)
 
   return (
     <>
       <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-[#2a2a2a]">
-        <h2 className="text-lg font-semibold mb-4 text-white flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-[#c9a55c]" />
-          TOP 10 GERAL
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-[#c9a55c]" />
+            TOP 10 SEMANAL
+          </h2>
+          {resetInfo && (
+            <div className="flex items-center gap-1.5 text-xs text-gray-500">
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Reset: {resetInfo.resetDate}</span>
+              <span className="text-[#c9a55c]">({resetInfo.daysLeft}d)</span>
+            </div>
+          )}
+        </div>
 
         <div className="space-y-1 mt-2">
           {isLoading ? (
