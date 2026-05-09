@@ -100,8 +100,10 @@ export function useF1Semanal() {
 }
 
 export function useRankingByDate(date: string | null) {
+  const url = date ? `${API_URL}/ranking?period=day&date=${date}` : null
+  
   const { data, error, isLoading, mutate } = useSWR<RankingPlayer[]>(
-    date ? `${API_URL}/ranking?period=day&date=${date}` : null,
+    url,
     fetcher,
     {
       refreshInterval: 30000,
