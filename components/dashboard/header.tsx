@@ -36,19 +36,16 @@ export function Header() {
       <div className="flex items-center gap-4">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#c9a55c] bg-[#0d0d0d]">
+          <div className="relative w-14 h-14 rounded-lg overflow-hidden border-2 border-[#c9a55c] bg-[#0d0d0d]">
             <Image
               src="/logo-elo-supremo.png"
               alt="ELO Supremo"
               fill
-              className="object-cover scale-[1.35]"
+              className="object-cover"
               priority
             />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-[#c9a55c] tracking-wide">SVS</h1>
-            <span className="text-[10px] text-[#c9a55c] font-semibold tracking-wider">{"ΞLØ - S U P R Ξ M Ø"}</span>
-          </div>
+          <h1 className="text-3xl font-bold text-[#c9a55c] tracking-wide">VS</h1>
         </div>
         
         <div className="hidden sm:block h-10 w-px bg-[#2a2a2a] mx-2" />
