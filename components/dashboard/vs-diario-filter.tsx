@@ -1,16 +1,37 @@
 "use client"
 
 import { Swords, User, Crown, ChevronRight, Loader2 } from "lucide-react"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useRankingByDate } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
+
+// Calcula a data do "dia atual" considerando que após 23h conta como dia seguinte
+// (meia noite no servidor = 23h Brasil)
+function getServerDate(): string {
+  const now = new Date()
+  // Ajusta para timezone Brasil (UTC-3)
+  const brasilOffset = -3 * 60
+  const localOffset = now.getTimezoneOffset()
+  const brasilNow = new Date(now.getTime() + (localOffset + brasilOffset) * 60000)
+  
+  const hour = brasilNow.getHours()
+  
+  // Se for após 23h, considera como próximo dia
+  if (hour >= 23) {
+    const nextDay = new Date(brasilNow)
+    nextDay.setDate(nextDay.getDate() + 1)
+    return nextDay.toISOString().split('T')[0]
+  }
+  
+  return brasilNow.toISOString().split('T')[0]
+}
 
 interface VsDiarioFilterProps {
   onDateChange?: (date: string | null) => void
 }
 
 export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
-  const today = new Date().toISOString().split('T')[0]
+  const today = useMemo(() => getServerDate(), [])
   const [date, setDate] = useState(today)
   const [filterDate, setFilterDate] = useState<string | null>(null)
   

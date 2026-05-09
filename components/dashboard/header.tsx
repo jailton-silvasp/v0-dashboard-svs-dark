@@ -1,7 +1,8 @@
 "use client"
 
-import { Calendar, Crown, Swords } from "lucide-react"
+import { Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
+import Image from "next/image"
 
 export function Header() {
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
@@ -35,13 +36,18 @@ export function Header() {
       <div className="flex items-center gap-4">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="relative">
-            <Crown className="w-10 h-10 text-[#c9a55c]" />
-            <Swords className="w-5 h-5 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
+          <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#c9a55c] bg-[#0d0d0d]">
+            <Image
+              src="/logo-elo-supremo.png"
+              alt="ELO Supremo"
+              fill
+              className="object-cover scale-[1.35]"
+              priority
+            />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-[#c9a55c] tracking-wide">SVS</h1>
-            <span className="text-[10px] text-red-500 font-semibold tracking-wider">{"ΞLØ - S U P R Ξ M Ø"}</span>
+            <span className="text-[10px] text-[#c9a55c] font-semibold tracking-wider">{"ΞLØ - S U P R Ξ M Ø"}</span>
           </div>
         </div>
         
