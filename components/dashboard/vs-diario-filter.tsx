@@ -2,19 +2,29 @@
 
 import { Swords, User, Crown, ChevronRight, Loader2 } from "lucide-react"
 import { useState } from "react"
-
 import { useRankingByDate } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 
-export function VsDiarioFilter() {
+interface VsDiarioFilterProps {
+  onDateChange?: (date: string | null) => void
+}
+
+export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
   const today = new Date().toISOString().split('T')[0]
   const [date, setDate] = useState(today)
   const [filterDate, setFilterDate] = useState<string | null>(null)
   
   const { ranking, isLoading } = useRankingByDate(filterDate)
+  const top3 = ranking.slice(0, 3)
 
   const handleFilter = () => {
     setFilterDate(date)
+    onDateChange?.(date)
+  }
+
+  const formatDisplayDate = (dateStr: string) => {
+    const d = new Date(dateStr + 'T12:00:00')
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
   }
 
   return (
@@ -51,11 +61,11 @@ export function VsDiarioFilter() {
         </div>
       </div>
 
-      {/* Resultados do filtro */}
+      {/* Resultados do filtro - Top 3 */}
       {filterDate && (
         <div className="mt-4 pt-4 border-t border-[#2a2a2a]">
           <h4 className="text-xs text-gray-500 uppercase mb-3">
-            Resultados de {new Date(filterDate + 'T12:00:00').toLocaleDateString('pt-BR')}
+            Resultados de {formatDisplayDate(filterDate)}
           </h4>
           
           {isLoading ? (
@@ -67,13 +77,13 @@ export function VsDiarioFilter() {
               Nenhum registro encontrado
             </p>
           ) : (
-            <div className="space-y-2 max-h-[200px] overflow-y-auto">
-              {ranking.slice(0, 5).map((player, index) => (
+            <div className="space-y-2">
+              {top3.map((player, index) => (
                 <div
                   key={`${player.discord_id || player.usuario}-${index}`}
                   className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-[#2a2a2a] transition-colors group"
                 >
-                  <span className={`text-xs font-bold w-5 ${index === 0 ? 'text-[#c9a55c]' : 'text-gray-500'}`}>
+                  <span className={`text-xs font-bold w-5 ${index === 0 ? 'text-[#c9a55c]' : index === 1 ? 'text-gray-400' : 'text-amber-700'}`}>
                     {index + 1}
                   </span>
                   

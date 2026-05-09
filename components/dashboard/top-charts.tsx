@@ -1,7 +1,7 @@
 "use client"
 
 import { Trophy, Clock } from "lucide-react"
-import { useRankingDiario } from "@/hooks/use-api"
+import { useRankingDiario, useRankingByDate } from "@/hooks/use-api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatPoints } from "@/lib/api"
 
@@ -17,6 +17,10 @@ interface ChartProps {
   color: string
   subtitle: string
   isLoading?: boolean
+}
+
+interface TopChartsProps {
+  selectedDate?: string | null
 }
 
 function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: ChartProps) {
@@ -52,7 +56,7 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: C
           ))
         ) : data.length === 0 ? (
           <div className="text-center py-4 text-gray-500 text-sm">
-            Nenhum dado disponível
+            Nenhum dado disponivel
           </div>
         ) : (
           data.map((item, index) => (
@@ -86,11 +90,16 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: C
   )
 }
 
-export function TopCharts() {
+export function TopCharts({ selectedDate }: TopChartsProps) {
   const { ranking: rankingDiario, isLoading: isLoadingDiario } = useRankingDiario()
+  const { ranking: rankingByDate, isLoading: isLoadingByDate } = useRankingByDate(selectedDate ?? null)
 
-  // Top 10 Geral - Maiores Pontos (do dia vigente, ordenado por maior pontuação)
-  const maioresPontosData: ChartData[] = [...rankingDiario]
+  // Usa os dados da data selecionada se houver, senao usa os dados do dia atual
+  const currentRanking = selectedDate ? rankingByDate : rankingDiario
+  const isLoading = selectedDate ? isLoadingByDate : isLoadingDiario
+
+  // Top 10 Geral - Maiores Pontos (ordenado por maior pontuacao)
+  const maioresPontosData: ChartData[] = [...currentRanking]
     .sort((a, b) => b.total - a.total)
     .slice(0, 10)
     .map(p => ({
@@ -98,11 +107,15 @@ export function TopCharts() {
       points: p.total
     }))
 
-  // Top 10 Geral - Últimos Pontos (do dia vigente, ordenado pelos últimos registros)
-  const ultimosPontosData: ChartData[] = rankingDiario.slice(0, 10).map(p => ({
+  // Top 10 Geral - Ultimos Pontos (ordenado pelos ultimos registros)
+  const ultimosPontosData: ChartData[] = currentRanking.slice(0, 10).map(p => ({
     name: p.usuario,
     points: p.total
   }))
+
+  const dateLabel = selectedDate 
+    ? new Date(selectedDate + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    : 'hoje'
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -111,16 +124,16 @@ export function TopCharts() {
         icon={<Trophy className="w-5 h-5 text-[#c9a55c]" />}
         data={maioresPontosData}
         color="#c9a55c"
-        subtitle="Maiores pontuações do dia"
-        isLoading={isLoadingDiario}
+        subtitle={`Maiores pontuacoes de ${dateLabel}`}
+        isLoading={isLoading}
       />
       <HorizontalBarChart
-        title="Top 10 Geral - Últimos Pontos"
+        title="Top 10 Geral - Ultimos Pontos"
         icon={<Clock className="w-5 h-5 text-[#c9a55c]" />}
         data={ultimosPontosData}
         color="#c9a55c"
-        subtitle="Últimos registros do dia"
-        isLoading={isLoadingDiario}
+        subtitle={`Ultimos registros de ${dateLabel}`}
+        isLoading={isLoading}
       />
     </div>
   )
