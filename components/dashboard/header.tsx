@@ -39,9 +39,9 @@ export function Header() {
           <Image
             src="/logo-elo-supremo.png"
             alt="ELO Supremo"
-            width={56}
-            height={56}
-            className="object-contain"
+            width={72}
+            height={72}
+            className="object-contain sepia saturate-150 hue-rotate-[10deg] brightness-110"
             priority
           />
           <h1 className="text-3xl font-bold text-[#c9a55c] tracking-wide">VS</h1>
