@@ -53,20 +53,22 @@ export function formatRelativeTime(dateString: string): string {
 
 // Formata horário no timezone Brasil/São Paulo no formato "21:20hs"
 export function formatBrazilTime(dateString: string): string {
-  // Se a string não tem timezone info, assumir que já está em horário Brasil
-  // A API retorna o horário local (Brasil), então não precisa de conversão
-  let date: Date
+  // A API retorna a data com "Z" (indicando UTC), mas o horário já está em 
+  // horário do Brasil. Por isso, removemos o "Z" e tratamos como horário local.
+  // Exemplo: "2026-05-09T17:50:50.256Z" -> o "17:50" já é o horário do Brasil
   
-  // Verifica se a string tem indicador de timezone (Z ou +/-offset)
-  if (dateString.endsWith('Z') || /[+-]\d{2}:\d{2}$/.test(dateString)) {
-    // String tem timezone, converter normalmente
-    date = new Date(dateString)
-  } else {
-    // String não tem timezone, tratar como horário local Brasil
-    // Adiciona o offset de Brasil (-03:00) para interpretar corretamente
-    date = new Date(dateString + '-03:00')
+  // Remove o Z do final se existir, para evitar conversão de timezone
+  const cleanDateString = dateString.replace('Z', '')
+  
+  // Extrai hora e minuto diretamente da string ISO
+  const timePart = cleanDateString.split('T')[1]
+  if (timePart) {
+    const [hours, minutes] = timePart.split(':')
+    return `${hours}:${minutes}hs`
   }
   
+  // Fallback: se não conseguir extrair, usa o método padrão
+  const date = new Date(dateString)
   const options: Intl.DateTimeFormatOptions = {
     hour: '2-digit',
     minute: '2-digit',
