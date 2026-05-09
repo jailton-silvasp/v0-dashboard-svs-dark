@@ -98,3 +98,21 @@ export function useF1Semanal() {
     mutate,
   }
 }
+
+export function useRankingByDate(date: string | null) {
+  const { data, error, isLoading, mutate } = useSWR<RankingPlayer[]>(
+    date ? `${API_URL}/ranking?period=day&date=${date}` : null,
+    fetcher,
+    {
+      refreshInterval: 30000,
+      revalidateOnFocus: true,
+    }
+  )
+
+  return {
+    ranking: data ?? [],
+    isLoading,
+    isError: error,
+    mutate,
+  }
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import { Crown, User } from "lucide-react"
-import Image from "next/image"
+
 import { useRanking } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -44,7 +44,7 @@ export function MVPCard() {
         <div className="relative mb-4">
           <div className="w-28 h-28 rounded-full border-4 border-[#c9a55c] bg-[#2a2a2a] flex items-center justify-center overflow-hidden">
             {mvp?.avatar_url ? (
-              <Image
+              <img
                 src={mvp.avatar_url}
                 alt={mvp.usuario}
                 width={112}
@@ -72,13 +72,7 @@ export function MVPCard() {
             <p className="text-[#c9a55c] text-4xl font-bold">
               {formatPoints(mvp.total)} <span className="text-lg">pts</span>
             </p>
-            <p className="text-gray-500 text-xs mt-2">Parabéns pelo desempenho!</p>
-
-            {/* Button */}
-            <button className="mt-4 flex items-center gap-2 px-6 py-2 border border-[#c9a55c] text-[#c9a55c] rounded-md text-sm hover:bg-[#c9a55c] hover:text-[#0d0d0d] transition-all duration-200">
-              <User className="w-4 h-4" />
-              VER PERFIL
-            </button>
+            <p className="text-gray-500 text-xs mt-2">Parabens pelo desempenho!</p>
           </>
         )}
       </div>

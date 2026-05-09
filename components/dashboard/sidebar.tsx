@@ -2,27 +2,13 @@
 
 import { 
   Home, 
-  Trophy, 
-  Swords, 
-  BarChart3, 
-  Flag, 
   Crown, 
-  Clock, 
-  Users, 
-  Settings 
+  Swords 
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { icon: Home, label: "Visão Geral", active: true },
-  { icon: Trophy, label: "Ranking", active: false },
-  { icon: Swords, label: "VS Diário", active: false },
-  { icon: BarChart3, label: "VS Semanal", active: false },
-  { icon: Flag, label: "F1 Semanal", active: false },
-  { icon: Crown, label: "MVP da Semana", active: false },
-  { icon: Clock, label: "Histórico", active: false },
-  { icon: Users, label: "Jogadores", active: false },
-  { icon: Settings, label: "Configurações", active: false },
 ]
 
 export function Sidebar() {
@@ -35,7 +21,7 @@ export function Sidebar() {
           <Swords className="w-6 h-6 text-[#c9a55c] absolute -bottom-1 left-1/2 -translate-x-1/2" />
         </div>
         <h1 className="text-2xl font-bold text-[#c9a55c] mt-1">SVS</h1>
-        <span className="text-xs text-red-500 font-semibold tracking-wider">DARK WAR</span>
+        <span className="text-xs text-red-500 font-semibold tracking-wider">{"ΞLØ - S U P R Ξ M Ø"}</span>
       </div>
 
       {/* Navigation */}

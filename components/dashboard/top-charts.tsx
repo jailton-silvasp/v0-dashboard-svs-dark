@@ -58,16 +58,16 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: C
           data.map((item, index) => (
             <div key={index} className="grid grid-cols-[30px_1fr_70px] gap-2 items-center group">
               <span className="text-gray-500 text-sm">{index + 1}</span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0">
                 <div 
-                  className="h-4 rounded-r transition-all duration-300 group-hover:opacity-80"
+                  className="h-4 rounded-r transition-all duration-300 group-hover:opacity-80 flex-shrink-0"
                   style={{ 
-                    width: `${(item.points / maxPoints) * 100}%`,
+                    width: `${Math.min((item.points / maxPoints) * 50, 50)}%`,
                     backgroundColor: color,
                     minWidth: '20px'
                   }}
                 />
-                <span className="text-gray-400 text-xs whitespace-nowrap truncate">{item.name}</span>
+                <span className="text-gray-400 text-xs truncate flex-1">{item.name}</span>
               </div>
               <span className="text-white text-sm text-right font-medium">
                 {formatPoints(item.points)}

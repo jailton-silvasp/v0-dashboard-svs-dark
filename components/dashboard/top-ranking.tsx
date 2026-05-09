@@ -1,7 +1,7 @@
 "use client"
 
 import { Trophy, Crown, User, ChevronRight } from "lucide-react"
-import Image from "next/image"
+
 import { useRanking } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -68,7 +68,7 @@ export function TopRanking() {
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden">
                     {player.avatar_url ? (
-                      <Image
+                      <img
                         src={player.avatar_url}
                         alt={player.usuario}
                         width={28}

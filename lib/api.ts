@@ -23,10 +23,10 @@ export interface RecentRecord {
   avatar_url?: string
 }
 
-// Formata pontos (37.20M, 1.50K...)
+// Formata pontos (2.84G, 789M, 1.50K...)
 export function formatPoints(value: number): string {
   if (value >= 1_000_000_000) {
-    return `${(value / 1_000_000_000).toFixed(2)}B`
+    return `${(value / 1_000_000_000).toFixed(2)}G`
   }
   if (value >= 1_000_000) {
     return `${(value / 1_000_000).toFixed(2)}M`
@@ -49,6 +49,19 @@ export function formatRelativeTime(dateString: string): string {
   if (diffMins < 60) return `há ${diffMins} ${diffMins === 1 ? "minuto" : "minutos"}`
   if (diffHours < 24) return `há ${diffHours} ${diffHours === 1 ? "hora" : "horas"}`
   return `há ${Math.floor(diffHours / 24)} dias`
+}
+
+// Formata horário no timezone Brasil/São Paulo no formato "21:20hs"
+export function formatBrazilTime(dateString: string): string {
+  const date = new Date(dateString)
+  const options: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'America/Sao_Paulo',
+    hour12: false
+  }
+  const time = date.toLocaleTimeString('pt-BR', options)
+  return `${time}hs`
 }
 
 export async function fetchRanking(period?: "day" | "all"): Promise<RankingPlayer[]> {
