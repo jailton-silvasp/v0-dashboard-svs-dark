@@ -36,15 +36,14 @@ export function Header() {
       <div className="flex items-center gap-4">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="relative w-14 h-14 rounded-lg overflow-hidden border-2 border-[#c9a55c] bg-[#0d0d0d]">
-            <Image
-              src="/logo-elo-supremo.png"
-              alt="ELO Supremo"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+          <Image
+            src="/logo-elo-supremo.png"
+            alt="ELO Supremo"
+            width={56}
+            height={56}
+            className="object-contain"
+            priority
+          />
           <h1 className="text-3xl font-bold text-[#c9a55c] tracking-wide">VS</h1>
         </div>
         
