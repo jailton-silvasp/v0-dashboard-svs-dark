@@ -25,6 +25,7 @@ interface RecordsModalProps {
 }
 
 function RecordsModal({ isOpen, onClose, records }: RecordsModalProps) {
+  console.log("[v0] RecordsModal - isOpen:", isOpen, "records:", records, "records.length:", records?.length)
   if (!isOpen) return null
 
   return (
@@ -117,6 +118,8 @@ function RecordsModal({ isOpen, onClose, records }: RecordsModalProps) {
 export function Footer() {
   const { records, isLoading } = useRecentRecords()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  
+  console.log("[v0] Footer - records:", records, "isLoading:", isLoading, "records.length:", records?.length)
 
   return (
     <>
