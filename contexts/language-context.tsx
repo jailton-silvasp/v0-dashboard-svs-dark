@@ -91,18 +91,18 @@ const translations: Record<Language, Translations> = {
     players: "JOGADORES",
     recordsRegistered: "Confrontos registrados",
     totalRecords: "Total de registros",
-    highestScore: "Maior pontuacao",
+    highestScore: "Maior pontuação",
     inRanking: "No ranking",
     
     // MVP Card
     mvpOfWeek: "MVP da Semana",
     points: "Pontos",
     pts: "pts",
-    congratsPerformance: "Parabens pelo desempenho!",
+    congratsPerformance: "Parabéns pelo desempenho!",
     noMvpYet: "Nenhum MVP ainda",
     
     // VS Diario Filter
-    vsDaily: "VS Diario",
+    vsDaily: "VS Diário",
     selectDate: "Selecione a data:",
     filter: "FILTRAR",
     resultsOf: "Resultados de",
@@ -120,27 +120,27 @@ const translations: Record<Language, Translations> = {
     
     // Top Charts
     top10HighestPoints: "Top 10 Geral - Maiores Pontos",
-    top10LatestPoints: "Top 10 Geral - Ultimos Pontos",
-    highestScoresOf: "Maiores pontuacoes de",
-    latestRecordsOf: "Ultimos registros de",
+    top10LatestPoints: "Top 10 Geral - Menores Pontos",
+    highestScoresOf: "Maiores pontuações de",
+    latestRecordsOf: "Menores pontuações de",
     today: "hoje",
     player: "Jogador",
-    noDataAvailable: "Nenhum dado disponivel",
+    noDataAvailable: "Nenhum dado disponível",
     
     // Weekly Charts
     vsWeekly: "VS Semanal",
     f1Weekly: "F1 Semanal",
-    weeklyVsScore: "Pontuacao semanal de VS",
-    lastF1MarkOfWeek: "Ultima marcacao de F1 da semana",
+    weeklyVsScore: "Pontuação semanal de VS",
+    lastF1MarkOfWeek: "Última marcação de F1 da semana",
     
     // Footer
     about: "Sobre",
-    aboutText: "Dashboard oficial ELO - S U P R E M O. Acompanhe rankings, estatisticas e desempenho dos melhores jogadores!",
+    aboutText: "Dashboard oficial ELO - S U P R E M O. Acompanhe rankings, estatísticas e desempenho dos melhores jogadores!",
     mainCommands: "Comandos Principais",
-    cmdVsDesc: "Registra sua pontuacao no VS",
-    cmdF1Desc: "Registra sua pontuacao no F1",
+    cmdVsDesc: "Registra sua pontuação no VS",
+    cmdF1Desc: "Registra sua pontuação no F1",
     cmdRankingDesc: "Mostra o ranking dos jogadores",
-    latestRecords: "Ultimos Registros",
+    latestRecords: "Últimos Registros",
     noRecordsToday: "Nenhum registro hoje",
     registered: "registrou",
     pointsLower: "pontos",
