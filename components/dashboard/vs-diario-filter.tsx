@@ -4,8 +4,9 @@ import { Swords, User, Crown, ChevronRight, Loader2 } from "lucide-react"
 import { useState, useMemo } from "react"
 import { useRankingByDate } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
+import { useLanguage } from "@/contexts/language-context"
 
-// Calcula a data do "dia atual" considerando que após 23h conta como dia seguinte
+// Calcula a data do "dia atual" considerando que apos 23h conta como dia seguinte
 // (meia noite no servidor = 23h Brasil)
 function getServerDate(): string {
   const now = new Date()
@@ -16,7 +17,7 @@ function getServerDate(): string {
   
   const hour = brasilNow.getHours()
   
-  // Se for após 23h, considera como próximo dia
+  // Se for apos 23h, considera como proximo dia
   if (hour >= 23) {
     const nextDay = new Date(brasilNow)
     nextDay.setDate(nextDay.getDate() + 1)
@@ -34,6 +35,7 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
   const today = useMemo(() => getServerDate(), [])
   const [date, setDate] = useState(today)
   const [filterDate, setFilterDate] = useState<string | null>(null)
+  const { t } = useLanguage()
   
   const { ranking, isLoading } = useRankingByDate(filterDate)
   const top3 = ranking.slice(0, 3)
@@ -45,7 +47,7 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
 
   const formatDisplayDate = (dateStr: string) => {
     const d = new Date(dateStr + 'T12:00:00')
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    return d.toLocaleDateString(t.dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' })
   }
 
   return (
@@ -53,12 +55,12 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
       <div className="flex items-center gap-2 mb-4">
         <Swords className="w-5 h-5 text-[#c9a55c]" />
         <h3 className="text-white font-semibold uppercase tracking-wide text-sm">
-          VS Diário
+          {t.vsDaily}
         </h3>
       </div>
 
       <div className="space-y-3">
-        <label className="text-gray-400 text-xs">Selecione a data:</label>
+        <label className="text-gray-400 text-xs">{t.selectDate}</label>
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
             <input
@@ -76,7 +78,7 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              "FILTRAR"
+              t.filter
             )}
           </button>
         </div>
@@ -86,7 +88,7 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
       {filterDate && (
         <div className="mt-4 pt-4 border-t border-[#2a2a2a]">
           <h4 className="text-xs text-gray-500 uppercase mb-3">
-            Resultados de {formatDisplayDate(filterDate)}
+            {t.resultsOf} {formatDisplayDate(filterDate)}
           </h4>
           
           {isLoading ? (
@@ -95,7 +97,7 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
             </div>
           ) : ranking.length === 0 ? (
             <p className="text-gray-500 text-sm text-center py-4">
-              Nenhum registro encontrado para esta data
+              {t.noRecordsForDate}
             </p>
           ) : (
             <div className="space-y-2">

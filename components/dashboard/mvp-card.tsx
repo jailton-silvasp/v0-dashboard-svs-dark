@@ -5,9 +5,11 @@ import { Crown, User } from "lucide-react"
 import { useVsSemanal } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useLanguage } from "@/contexts/language-context"
 
 export function MVPCard() {
   const { ranking, isLoading, isError } = useVsSemanal()
+  const { t } = useLanguage()
 
   const mvp = ranking.length > 0 ? ranking[0] : null
 
@@ -17,7 +19,7 @@ export function MVPCard() {
         <div className="flex items-center gap-2 mb-4">
           <Crown className="w-5 h-5 text-[#c9a55c]" />
           <h3 className="text-[#c9a55c] font-semibold uppercase tracking-wide text-sm">
-            MVP da Semana
+            {t.mvpOfWeek}
           </h3>
         </div>
         <div className="flex flex-col items-center">
@@ -35,7 +37,7 @@ export function MVPCard() {
       <div className="flex items-center gap-2 mb-4">
         <Crown className="w-5 h-5 text-[#c9a55c]" />
         <h3 className="text-[#c9a55c] font-semibold uppercase tracking-wide text-sm">
-          MVP da Semana
+          {t.mvpOfWeek}
         </h3>
       </div>
 
@@ -63,16 +65,16 @@ export function MVPCard() {
         {/* Info */}
         {isError || !mvp ? (
           <div className="text-center">
-            <p className="text-gray-500">Nenhum MVP ainda</p>
+            <p className="text-gray-500">{t.noMvpYet}</p>
           </div>
         ) : (
           <>
             <h4 className="text-white font-bold text-lg text-center">{mvp.usuario}</h4>
-            <p className="text-gray-400 text-sm mt-1">Pontos</p>
+            <p className="text-gray-400 text-sm mt-1">{t.points}</p>
             <p className="text-[#c9a55c] text-4xl font-bold">
-              {formatPoints(mvp.total)} <span className="text-lg">pts</span>
+              {formatPoints(mvp.total)} <span className="text-lg">{t.pts}</span>
             </p>
-            <p className="text-gray-500 text-xs mt-2">Parabens pelo desempenho!</p>
+            <p className="text-gray-500 text-xs mt-2">{t.congratsPerformance}</p>
           </>
         )}
       </div>

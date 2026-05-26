@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Rajdhani, Roboto } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { LanguageProvider } from '@/contexts/language-context'
 import './globals.css'
 
 const rajdhani = Rajdhani({ 
@@ -29,7 +30,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="bg-[#0d0d0d]">
       <body className={`${rajdhani.variable} ${roboto.variable} font-sans antialiased bg-[#0d0d0d] text-white`}>
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

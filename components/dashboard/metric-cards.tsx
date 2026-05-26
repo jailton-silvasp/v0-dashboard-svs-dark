@@ -4,40 +4,42 @@ import { Swords, Trophy, Flag, Users } from "lucide-react"
 import { useDashboard, useRanking } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useLanguage } from "@/contexts/language-context"
 
 export function MetricCards() {
   const { data: dashboardData, isLoading: isLoadingDashboard } = useDashboard()
   const { ranking, isLoading: isLoadingRanking } = useRanking()
+  const { t } = useLanguage()
 
   const isLoading = isLoadingDashboard || isLoadingRanking
 
   const metrics = [
     {
       icon: Swords,
-      label: "VS HOJE",
+      label: t.vsToday,
       value: dashboardData?.hoje ?? 0,
-      subtitle: "Confrontos registrados",
+      subtitle: t.recordsRegistered,
       iconColor: "text-[#c9a55c]",
     },
     {
       icon: Trophy,
-      label: "VS TOTAL",
+      label: t.vsTotal,
       value: dashboardData?.total ?? 0,
-      subtitle: "Total de registros",
+      subtitle: t.totalRecords,
       iconColor: "text-[#c9a55c]",
     },
     {
       icon: Flag,
-      label: "TOP SCORE",
+      label: t.topScore,
       value: ranking.length > 0 ? Math.round(ranking[0]?.total ?? 0) : 0,
-      subtitle: "Maior pontuação",
+      subtitle: t.highestScore,
       iconColor: "text-[#3b82f6]",
     },
     {
       icon: Users,
-      label: "JOGADORES",
+      label: t.players,
       value: ranking.length,
-      subtitle: "No ranking",
+      subtitle: t.inRanking,
       iconColor: "text-[#3b82f6]",
     },
   ]
