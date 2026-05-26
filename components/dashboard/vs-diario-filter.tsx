@@ -1,9 +1,7 @@
 "use client"
 
-import { Swords, User, Crown, ChevronRight, Loader2 } from "lucide-react"
+import { Swords, Loader2 } from "lucide-react"
 import { useState, useMemo } from "react"
-import { useRankingByDate } from "@/hooks/use-api"
-import { formatPoints } from "@/lib/api"
 import { useLanguage } from "@/contexts/language-context"
 
 // Calcula a data do "dia atual" considerando que apos 23h conta como dia seguinte
@@ -34,20 +32,14 @@ interface VsDiarioFilterProps {
 export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
   const today = useMemo(() => getServerDate(), [])
   const [date, setDate] = useState(today)
-  const [filterDate, setFilterDate] = useState<string | null>(null)
+  const [isFiltering, setIsFiltering] = useState(false)
   const { t } = useLanguage()
-  
-  const { ranking, isLoading } = useRankingByDate(filterDate)
-  const top3 = ranking.slice(0, 3)
 
   const handleFilter = () => {
-    setFilterDate(date)
+    setIsFiltering(true)
     onDateChange?.(date)
-  }
-
-  const formatDisplayDate = (dateStr: string) => {
-    const d = new Date(dateStr + 'T12:00:00')
-    return d.toLocaleDateString(t.dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' })
+    // Simula um pequeno delay para feedback visual
+    setTimeout(() => setIsFiltering(false), 300)
   }
 
   return (
@@ -72,10 +64,10 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
           </div>
           <button 
             onClick={handleFilter}
-            disabled={isLoading}
+            disabled={isFiltering}
             className="bg-[#c9a55c] text-[#0d0d0d] px-6 py-2 rounded-md font-semibold text-sm hover:bg-[#d4b56d] transition-all duration-200 flex items-center gap-2 disabled:opacity-50"
           >
-            {isLoading ? (
+            {isFiltering ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               t.filter
@@ -83,66 +75,6 @@ export function VsDiarioFilter({ onDateChange }: VsDiarioFilterProps) {
           </button>
         </div>
       </div>
-
-      {/* Resultados do filtro - Top 3 */}
-      {filterDate && (
-        <div className="mt-4 pt-4 border-t border-[#2a2a2a]">
-          <h4 className="text-xs text-gray-500 uppercase mb-3">
-            {t.resultsOf} {formatDisplayDate(filterDate)}
-          </h4>
-          
-          {isLoading ? (
-            <div className="flex items-center justify-center py-4">
-              <Loader2 className="w-5 h-5 animate-spin text-[#c9a55c]" />
-            </div>
-          ) : ranking.length === 0 ? (
-            <p className="text-gray-500 text-sm text-center py-4">
-              {t.noRecordsForDate}
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {top3.map((player, index) => (
-                <div
-                  key={`${player.discord_id || player.usuario}-${index}`}
-                  className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-[#2a2a2a] transition-colors group"
-                >
-                  <span className={`text-xs font-bold w-5 ${index === 0 ? 'text-[#c9a55c]' : index === 1 ? 'text-gray-400' : 'text-amber-700'}`}>
-                    {index + 1}
-                  </span>
-                  
-                  <div className="w-6 h-6 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden">
-                    {player.avatar_url ? (
-                      <img
-                        src={player.avatar_url}
-                        alt={player.usuario}
-                        width={24}
-                        height={24}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <User className="w-3 h-3 text-gray-500" />
-                    )}
-                  </div>
-                  
-                  <span className="text-white text-xs flex-1 truncate group-hover:text-[#c9a55c]">
-                    {player.usuario}
-                  </span>
-                  
-                  {index === 0 && (
-                    <Crown className="w-3 h-3 text-[#c9a55c]" />
-                  )}
-                  
-                  <span className={`text-xs font-medium ${index === 0 ? 'text-[#c9a55c]' : 'text-white'}`}>
-                    {formatPoints(player.total)}
-                  </span>
-                  
-                  <ChevronRight className="w-3 h-3 text-gray-600 group-hover:text-[#c9a55c]" />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   )
 }

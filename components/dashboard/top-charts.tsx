@@ -117,10 +117,11 @@ export function TopCharts({ selectedDate }: TopChartsProps) {
       points: p.total
     }))
 
-  // Top 10 Geral - Últimos Pontos (10 menores pontuadores, do maior ao menor)
-  const ultimosPontosData: ChartData[] = [...currentRanking]
-    .sort((a, b) => b.total - a.total)
-    .filter((_, index, arr) => index >= arr.length - 10)
+  // Top 10 Geral - Menores Pontos (10 menores pontuadores, ordenados do maior para o menor)
+  const menoresPontosData: ChartData[] = [...currentRanking]
+    .sort((a, b) => a.total - b.total) // Ordena do menor para o maior para pegar os menores
+    .slice(0, 10) // Pega os 10 menores
+    .sort((a, b) => b.total - a.total) // Reordena do maior para o menor para exibição
     .map(p => ({
       name: p.usuario,
       points: p.total
@@ -146,7 +147,7 @@ export function TopCharts({ selectedDate }: TopChartsProps) {
       <HorizontalBarChart
         title={t.top10LatestPoints}
         icon={<Clock className="w-5 h-5 text-[#c9a55c]" />}
-        data={ultimosPontosData}
+        data={menoresPontosData}
         color="#c9a55c"
         subtitle={`${t.latestRecordsOf} ${dateLabel}`}
         isLoading={isLoading}
