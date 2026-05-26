@@ -4,6 +4,7 @@ import { Trophy, Clock } from "lucide-react"
 import { useRankingDiario, useRankingByDate } from "@/hooks/use-api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatPoints } from "@/lib/api"
+import { useLanguage } from "@/contexts/language-context"
 
 interface ChartData {
   name: string
@@ -17,13 +18,16 @@ interface ChartProps {
   color: string
   subtitle: string
   isLoading?: boolean
+  playerLabel: string
+  pointsLabel: string
+  noDataText: string
 }
 
 interface TopChartsProps {
   selectedDate?: string | null
 }
 
-function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: ChartProps) {
+function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, playerLabel, pointsLabel, noDataText }: ChartProps) {
   const maxPoints = data.length > 0 ? data[0].points : 1
 
   return (
@@ -38,8 +42,8 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: C
       {/* Header */}
       <div className="grid grid-cols-[30px_1fr_70px] gap-2 text-xs text-gray-500 uppercase tracking-wide pb-2 border-b border-[#2a2a2a]">
         <span>#</span>
-        <span>Jogador</span>
-        <span className="text-right">Pontos</span>
+        <span>{playerLabel}</span>
+        <span className="text-right">{pointsLabel}</span>
       </div>
 
       {/* Custom Bar List */}
@@ -56,7 +60,7 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: C
           ))
         ) : data.length === 0 ? (
           <div className="text-center py-4 text-gray-500 text-sm">
-            Nenhum dado disponivel
+            {noDataText}
           </div>
         ) : (
           data.map((item, index) => (
@@ -93,6 +97,7 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading }: C
 export function TopCharts({ selectedDate }: TopChartsProps) {
   const { ranking: rankingDiario, isLoading: isLoadingDiario } = useRankingDiario()
   const { ranking: rankingByDate, isLoading: isLoadingByDate } = useRankingByDate(selectedDate ?? null)
+  const { t } = useLanguage()
 
   // Usa os dados da data selecionada se houver, senao usa os dados do dia atual
   const currentRanking = selectedDate ? rankingByDate : rankingDiario
@@ -114,26 +119,32 @@ export function TopCharts({ selectedDate }: TopChartsProps) {
   }))
 
   const dateLabel = selectedDate 
-    ? new Date(selectedDate + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
-    : 'hoje'
+    ? new Date(selectedDate + 'T12:00:00').toLocaleDateString(t.dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' })
+    : t.today
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       <HorizontalBarChart
-        title="Top 10 Geral - Maiores Pontos"
+        title={t.top10HighestPoints}
         icon={<Trophy className="w-5 h-5 text-[#c9a55c]" />}
         data={maioresPontosData}
         color="#c9a55c"
-        subtitle={`Maiores pontuacoes de ${dateLabel}`}
+        subtitle={`${t.highestScoresOf} ${dateLabel}`}
         isLoading={isLoading}
+        playerLabel={t.player}
+        pointsLabel={t.points}
+        noDataText={t.noDataAvailable}
       />
       <HorizontalBarChart
-        title="Top 10 Geral - Ultimos Pontos"
+        title={t.top10LatestPoints}
         icon={<Clock className="w-5 h-5 text-[#c9a55c]" />}
         data={ultimosPontosData}
         color="#c9a55c"
-        subtitle={`Ultimos registros de ${dateLabel}`}
+        subtitle={`${t.latestRecordsOf} ${dateLabel}`}
         isLoading={isLoading}
+        playerLabel={t.player}
+        pointsLabel={t.points}
+        noDataText={t.noDataAvailable}
       />
     </div>
   )

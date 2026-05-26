@@ -14,6 +14,7 @@ import {
 import { useVsSemanal, useF1Semanal } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useLanguage } from "@/contexts/language-context"
 
 interface ChartData {
   name: string
@@ -27,9 +28,10 @@ interface VerticalChartProps {
   color: string
   subtitle: string
   isLoading?: boolean
+  pointsLabel: string
 }
 
-function VerticalBarChart({ title, icon, data, color, subtitle, isLoading }: VerticalChartProps) {
+function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, pointsLabel }: VerticalChartProps) {
   const maxPoints = data.length > 0 ? Math.max(...data.map(d => d.points)) : 1
   const yAxisMax = Math.ceil(maxPoints * 1.2)
   
@@ -38,7 +40,7 @@ function VerticalBarChart({ title, icon, data, color, subtitle, isLoading }: Ver
       return (
         <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-3 shadow-lg">
           <p className="text-white font-medium">{payload[0].payload.name}</p>
-          <p className="text-[#c9a55c]">{formatPoints(payload[0].value)} pontos</p>
+          <p className="text-[#c9a55c]">{formatPoints(payload[0].value)} {pointsLabel}</p>
         </div>
       )
     }
@@ -80,7 +82,7 @@ function VerticalBarChart({ title, icon, data, color, subtitle, isLoading }: Ver
 
       {data.length === 0 ? (
         <div className="h-[250px] flex items-center justify-center">
-          <p className="text-gray-500 text-sm">Nenhum dado disponível</p>
+          <p className="text-gray-500 text-sm">{subtitle}</p>
         </div>
       ) : (
         <div className="h-[250px]">
@@ -139,38 +141,45 @@ function VerticalBarChart({ title, icon, data, color, subtitle, isLoading }: Ver
 export function WeeklyCharts() {
   const { ranking: vsSemanal, isLoading: isLoadingVs } = useVsSemanal()
   const { ranking: f1Semanal, isLoading: isLoadingF1 } = useF1Semanal()
+  const { t } = useLanguage()
 
-  // VS: soma semanal de todas as marcações
-  const vsData: ChartData[] = vsSemanal.slice(0, 10).map(p => ({
-    name: p.usuario,
-    points: p.total
-  }))
+  // VS: soma semanal de todas as marcacoes - ordenado em ordem decrescente
+  const vsData: ChartData[] = [...vsSemanal]
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10)
+    .map(p => ({
+      name: p.usuario,
+      points: p.total
+    }))
 
-  // F1: última marcação da semana (não soma, exibe valor mais recente)
-  // Nota: A API /ranking/semanal?tipo=f1 deve retornar o último valor registrado,
-  // não a soma de todas as marcações da semana
-  const f1Data: ChartData[] = f1Semanal.slice(0, 10).map(p => ({
-    name: p.usuario,
-    points: p.total
-  }))
+  // F1: ultima marcacao da semana - ordenado em ordem decrescente
+  const f1Data: ChartData[] = [...f1Semanal]
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10)
+    .map(p => ({
+      name: p.usuario,
+      points: p.total
+    }))
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       <VerticalBarChart
-        title="VS Semanal"
+        title={t.vsWeekly}
         icon={<Swords className="w-5 h-5 text-[#c9a55c]" />}
         data={vsData}
         color="#c9a55c"
-        subtitle="Pontuação semanal de VS"
+        subtitle={t.weeklyVsScore}
         isLoading={isLoadingVs}
+        pointsLabel={t.pointsLower}
       />
       <VerticalBarChart
-        title="F1 Semanal"
+        title={t.f1Weekly}
         icon={<Flag className="w-5 h-5 text-[#3b82f6]" />}
         data={f1Data}
         color="#3b82f6"
-        subtitle="Última marcação de F1 da semana"
+        subtitle={t.lastF1MarkOfWeek}
         isLoading={isLoadingF1}
+        pointsLabel={t.pointsLower}
       />
     </div>
   )

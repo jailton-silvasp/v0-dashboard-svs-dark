@@ -6,11 +6,16 @@ import { formatPoints, formatBrazilTime } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import Image from "next/image"
 import { useState } from "react"
+import { useLanguage } from "@/contexts/language-context"
 
-const commands = [
-  { cmd: "!vs", desc: "Registra sua pontuação no VS" },
-  { cmd: "!f1", desc: "Registra sua pontuação no F1" },
-  { cmd: "!ranking", desc: "Mostra o ranking dos jogadores" },
+const getCommands = (t: {
+  cmdVsDesc: string
+  cmdF1Desc: string
+  cmdRankingDesc: string
+}) => [
+  { cmd: "!vs", desc: t.cmdVsDesc },
+  { cmd: "!f1", desc: t.cmdF1Desc },
+  { cmd: "!ranking", desc: t.cmdRankingDesc },
 ]
 
 interface RecordsModalProps {
@@ -22,9 +27,16 @@ interface RecordsModalProps {
     criado_em: string
     avatar_url?: string
   }>
+  translations: {
+    recordsOfToday: string
+    player: string
+    points: string
+    noRecordsToday: string
+    totalRecordsToday: string
+  }
 }
 
-function RecordsModal({ isOpen, onClose, records }: RecordsModalProps) {
+function RecordsModal({ isOpen, onClose, records, translations }: RecordsModalProps) {
   if (!isOpen) return null
 
   return (
@@ -41,7 +53,7 @@ function RecordsModal({ isOpen, onClose, records }: RecordsModalProps) {
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#2a2a2a]">
           <div className="flex items-center gap-3">
             <Clock className="w-6 h-6 text-[#c9a55c]" />
-            <h2 className="text-lg sm:text-xl font-bold text-white">REGISTROS DE HOJE</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-white">{translations.recordsOfToday}</h2>
           </div>
           <button 
             onClick={onClose}
@@ -53,8 +65,8 @@ function RecordsModal({ isOpen, onClose, records }: RecordsModalProps) {
 
         {/* Table Header */}
         <div className="grid grid-cols-[1fr_100px_80px] sm:grid-cols-[1fr_120px_100px] gap-2 px-4 sm:px-6 py-3 text-xs text-gray-500 uppercase tracking-wide border-b border-[#2a2a2a] bg-[#0d0d0d]">
-          <span>Jogador</span>
-          <span className="text-right">Pontos</span>
+          <span>{translations.player}</span>
+          <span className="text-right">{translations.points}</span>
           <span className="text-right">Horario</span>
         </div>
 
@@ -63,7 +75,7 @@ function RecordsModal({ isOpen, onClose, records }: RecordsModalProps) {
           <div className="divide-y divide-[#2a2a2a]">
             {records.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                Nenhum registro hoje
+                {translations.noRecordsToday}
               </div>
             ) : (
               records.map((record, index) => (
@@ -106,7 +118,7 @@ function RecordsModal({ isOpen, onClose, records }: RecordsModalProps) {
         {/* Footer */}
         <div className="p-4 sm:p-6 border-t border-[#2a2a2a] bg-[#0d0d0d]">
           <p className="text-center text-gray-500 text-sm">
-            Total de {records.length} registros hoje
+            {translations.totalRecordsToday.replace("{count}", String(records.length))}
           </p>
         </div>
       </div>
@@ -117,6 +129,9 @@ function RecordsModal({ isOpen, onClose, records }: RecordsModalProps) {
 export function Footer() {
   const { records, isLoading } = useRecentRecords()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { t } = useLanguage()
+
+  const commands = getCommands(t)
 
   return (
     <>
@@ -127,7 +142,7 @@ export function Footer() {
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 transition-all duration-300 hover:border-[#c9a55c]">
           <div className="flex items-center gap-2 mb-3">
             <Info className="w-4 h-4 text-[#c9a55c]" />
-            <h4 className="text-white font-semibold uppercase tracking-wide text-xs">Sobre</h4>
+            <h4 className="text-white font-semibold uppercase tracking-wide text-xs">{t.about}</h4>
           </div>
           <div className="flex items-start gap-3">
             <Image
@@ -138,7 +153,7 @@ export function Footer() {
               className="object-contain sepia saturate-150 hue-rotate-[10deg] brightness-110 shrink-0"
             />
             <p className="text-xs text-gray-400 leading-relaxed">
-              {"Dashboard oficial ΞLØ - S U P R Ξ M Ø. Acompanhe rankings, estatísticas e desempenho dos melhores jogadores!"}
+              {t.aboutText}
             </p>
           </div>
         </div>
@@ -147,7 +162,7 @@ export function Footer() {
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 transition-all duration-300 hover:border-[#c9a55c]">
           <div className="flex items-center gap-2 mb-3">
             <Terminal className="w-4 h-4 text-[#c9a55c]" />
-            <h4 className="text-white font-semibold uppercase tracking-wide text-xs">Comandos Principais</h4>
+            <h4 className="text-white font-semibold uppercase tracking-wide text-xs">{t.mainCommands}</h4>
           </div>
           <div className="space-y-2">
             {commands.map((cmd, i) => (
@@ -163,7 +178,7 @@ export function Footer() {
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 transition-all duration-300 hover:border-[#c9a55c]">
           <div className="flex items-center gap-2 mb-3">
             <Clock className="w-4 h-4 text-[#c9a55c]" />
-            <h4 className="text-[#c9a55c] font-semibold uppercase tracking-wide text-xs">Últimos Registros</h4>
+            <h4 className="text-[#c9a55c] font-semibold uppercase tracking-wide text-xs">{t.latestRecords}</h4>
           </div>
           <div className="space-y-2">
             {isLoading ? (
@@ -177,14 +192,14 @@ export function Footer() {
                 </div>
               ))
             ) : records.length === 0 ? (
-              <p className="text-xs text-gray-500 text-center py-2">Nenhum registro hoje</p>
+              <p className="text-xs text-gray-500 text-center py-2">{t.noRecordsToday}</p>
             ) : (
               records.slice(0, 3).map((record, i) => (
                 <div key={i} className="flex items-start gap-2 text-xs group cursor-pointer">
                   <Swords className="w-3 h-3 text-[#c9a55c] mt-0.5 shrink-0" />
                   <div className="flex-1">
                     <p className="text-gray-400 group-hover:text-white transition-colors">
-                      {record.usuario} registrou {formatPoints(record.valor)} pontos
+                      {record.usuario} {t.registered} {formatPoints(record.valor)} {t.pointsLower}
                     </p>
                     <p className="text-gray-600">{formatBrazilTime(record.criado_em)}</p>
                   </div>
@@ -197,7 +212,7 @@ export function Footer() {
             disabled={records.length === 0}
             className="w-full mt-3 py-1.5 border border-[#2a2a2a] rounded text-gray-500 text-xs hover:border-[#c9a55c] hover:text-[#c9a55c] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            VER TODOS
+            {t.viewAll}
           </button>
         </div>
       </div>
@@ -205,7 +220,7 @@ export function Footer() {
       {/* Developer Credit */}
       <div className="border-t border-[#2a2a2a] pt-4 text-center">
         <div className="flex items-center justify-center gap-2">
-          <span className="text-gray-600 text-xs">developed by</span>
+          <span className="text-gray-600 text-xs">{t.developedBy}</span>
           <div className="flex items-center gap-1">
             <Crown className="w-4 h-4 text-[#c9a55c]" />
             <span className="text-[#c9a55c] font-bold text-sm tracking-wider">{"『PRΞDΔDΩR』"}</span>
@@ -218,6 +233,13 @@ export function Footer() {
       isOpen={isModalOpen} 
       onClose={() => setIsModalOpen(false)} 
       records={records}
+      translations={{
+        recordsOfToday: t.recordsOfToday,
+        player: t.player,
+        points: t.points,
+        noRecordsToday: t.noRecordsToday,
+        totalRecordsToday: t.totalRecordsToday,
+      }}
     />
     </>
   )
