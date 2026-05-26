@@ -1,7 +1,7 @@
 "use client"
 
 import { Trophy, Clock } from "lucide-react"
-import { useRankingDiario, useRankingByDate } from "@/hooks/use-api"
+import { useRankingDiario, useRankingByDate, useRankingGeral } from "@/hooks/use-api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatPoints } from "@/lib/api"
 import { useLanguage } from "@/contexts/language-context"
@@ -97,14 +97,21 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, pla
 export function TopCharts({ selectedDate }: TopChartsProps) {
   const { ranking: rankingDiario, isLoading: isLoadingDiario } = useRankingDiario()
   const { ranking: rankingByDate, isLoading: isLoadingByDate } = useRankingByDate(selectedDate ?? null)
+  const { ranking: rankingGeral, isLoading: isLoadingGeral } = useRankingGeral()
   const { t } = useLanguage()
 
-  // Usa os dados da data selecionada se houver, senao usa os dados do dia atual
-  const currentRanking = selectedDate ? rankingByDate : rankingDiario
-  const isLoading = selectedDate ? isLoadingByDate : isLoadingDiario
+  // Para "Maiores Pontos": usa data selecionada, ou ranking diário se tiver dados, ou ranking geral como fallback
+  // Para "Últimos Registros": sempre usa o ranking geral (mostra os últimos registros de todos os tempos)
+  const currentRankingForHighest = selectedDate 
+    ? rankingByDate 
+    : (rankingDiario.length > 0 ? rankingDiario : rankingGeral)
+  
+  const isLoadingHighest = selectedDate 
+    ? isLoadingByDate 
+    : (isLoadingDiario || (rankingDiario.length === 0 && isLoadingGeral))
 
   // Top 10 Geral - Maiores Pontos (ordenado por maior pontuacao)
-  const maioresPontosData: ChartData[] = [...currentRanking]
+  const maioresPontosData: ChartData[] = [...currentRankingForHighest]
     .sort((a, b) => b.total - a.total)
     .slice(0, 10)
     .map(p => ({
@@ -112,11 +119,13 @@ export function TopCharts({ selectedDate }: TopChartsProps) {
       points: p.total
     }))
 
-  // Top 10 Geral - Ultimos Pontos (ordenado pelos ultimos registros)
-  const ultimosPontosData: ChartData[] = currentRanking.slice(0, 10).map(p => ({
-    name: p.usuario,
-    points: p.total
-  }))
+  // Top 10 Geral - Últimos Registros (usa ranking geral para mostrar dados mesmo quando não há registros do dia)
+  const ultimosPontosData: ChartData[] = [...rankingGeral]
+    .slice(0, 10)
+    .map(p => ({
+      name: p.usuario,
+      points: p.total
+    }))
 
   const dateLabel = selectedDate 
     ? new Date(selectedDate + 'T12:00:00').toLocaleDateString(t.dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -130,7 +139,7 @@ export function TopCharts({ selectedDate }: TopChartsProps) {
         data={maioresPontosData}
         color="#c9a55c"
         subtitle={`${t.highestScoresOf} ${dateLabel}`}
-        isLoading={isLoading}
+        isLoading={isLoadingHighest}
         playerLabel={t.player}
         pointsLabel={t.points}
         noDataText={t.noDataAvailable}
@@ -141,7 +150,7 @@ export function TopCharts({ selectedDate }: TopChartsProps) {
         data={ultimosPontosData}
         color="#c9a55c"
         subtitle={`${t.latestRecordsOf} ${dateLabel}`}
-        isLoading={isLoading}
+        isLoading={isLoadingGeral}
         playerLabel={t.player}
         pointsLabel={t.points}
         noDataText={t.noDataAvailable}

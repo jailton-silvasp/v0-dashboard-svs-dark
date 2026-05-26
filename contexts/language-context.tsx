@@ -120,9 +120,9 @@ const translations: Record<Language, Translations> = {
     
     // Top Charts
     top10HighestPoints: "Top 10 Geral - Maiores Pontos",
-    top10LatestPoints: "Top 10 Geral - Ultimos Pontos",
+    top10LatestPoints: "Top 10 Geral - Últimos Pontos",
     highestScoresOf: "Maiores pontuacoes de",
-    latestRecordsOf: "Ultimos registros de",
+    latestRecordsOf: "Últimos registros de",
     today: "hoje",
     player: "Jogador",
     noDataAvailable: "Nenhum dado disponivel",
@@ -140,7 +140,7 @@ const translations: Record<Language, Translations> = {
     cmdVsDesc: "Registra sua pontuacao no VS",
     cmdF1Desc: "Registra sua pontuacao no F1",
     cmdRankingDesc: "Mostra o ranking dos jogadores",
-    latestRecords: "Ultimos Registros",
+    latestRecords: "Últimos Registros",
     noRecordsToday: "Nenhum registro hoje",
     registered: "registrou",
     pointsLower: "pontos",
