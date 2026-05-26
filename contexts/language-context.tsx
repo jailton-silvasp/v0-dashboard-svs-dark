@@ -98,7 +98,7 @@ const translations: Record<Language, Translations> = {
     mvpOfWeek: "MVP da Semana",
     points: "Pontos",
     pts: "pts",
-    congratsPerformance: "Parabens pelo desempenho!",
+    congratsPerformance: "Parabéns pelo desempenho!",
     noMvpYet: "Nenhum MVP ainda",
     
     // VS Diario Filter
