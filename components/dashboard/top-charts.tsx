@@ -21,14 +21,18 @@ interface ChartProps {
   playerLabel: string
   pointsLabel: string
   noDataText: string
+  invertBarScale?: boolean // Para menores pontos, inverte a escala das barras
 }
 
 interface TopChartsProps {
   selectedDate?: string | null
 }
 
-function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, playerLabel, pointsLabel, noDataText }: ChartProps) {
-  const maxPoints = data.length > 0 ? data[0].points : 1
+function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, playerLabel, pointsLabel, noDataText, invertBarScale }: ChartProps) {
+  // Para menores pontos, usa o maior valor do array para calcular proporção das barras
+  const maxPoints = data.length > 0 
+    ? (invertBarScale ? Math.max(...data.map(d => d.points)) : data[0].points)
+    : 1
 
   return (
     <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-5 transition-all duration-300 hover:border-[#c9a55c]">
@@ -117,11 +121,10 @@ export function TopCharts({ selectedDate }: TopChartsProps) {
       points: p.total
     }))
 
-  // Top 10 Geral - Menores Pontos (10 menores pontuadores, ordenados do maior para o menor)
+  // Top 10 Geral - Menores Pontos (10 menores pontuadores, do menor para o maior)
   const menoresPontosData: ChartData[] = [...currentRanking]
-    .sort((a, b) => a.total - b.total) // Ordena do menor para o maior para pegar os menores
+    .sort((a, b) => a.total - b.total) // Ordena do menor para o maior
     .slice(0, 10) // Pega os 10 menores
-    .sort((a, b) => b.total - a.total) // Reordena do maior para o menor para exibição
     .map(p => ({
       name: p.usuario,
       points: p.total
@@ -154,6 +157,7 @@ export function TopCharts({ selectedDate }: TopChartsProps) {
         playerLabel={t.player}
         pointsLabel={t.points}
         noDataText={t.noDataAvailable}
+        invertBarScale={true}
       />
     </div>
   )
