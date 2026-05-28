@@ -24,23 +24,26 @@ app.get("/", (req, res) => {
 // FUNÇÃO AUXILIAR: Data Lógica
 // Marcações até 22:59 = dia atual
 // Marcações a partir das 23:00 = dia seguinte
-// CORREÇÃO: Usa timezone('America/Sao_Paulo', criado_em) para garantir conversão correta
-// independente de como a coluna foi criada (WITH ou WITHOUT TIME ZONE)
+// 
+// IMPORTANTE: A coluna criado_em é salva com NOW() AT TIME ZONE 'America/Sao_Paulo',
+// o que significa que já está em horário de São Paulo (sem info de timezone).
+// Por isso, NÃO devemos aplicar conversão de timezone novamente no SELECT.
+// Apenas extraímos a hora diretamente do valor salvo.
 // -------------------------
 const DATA_LOGICA_SQL = `
   CASE 
-    WHEN EXTRACT(HOUR FROM timezone('America/Sao_Paulo', criado_em)) >= 23 
-    THEN DATE(timezone('America/Sao_Paulo', criado_em)) + INTERVAL '1 day'
-    ELSE DATE(timezone('America/Sao_Paulo', criado_em))
+    WHEN EXTRACT(HOUR FROM criado_em) >= 23 
+    THEN DATE(criado_em) + INTERVAL '1 day'
+    ELSE DATE(criado_em)
   END
 `;
 
-// Data lógica de "hoje" (se agora >= 23h, considera como amanhã)
+// Data lógica de "hoje" (se agora >= 23h em SP, considera como amanhã)
 const HOJE_LOGICO_SQL = `
   CASE 
-    WHEN EXTRACT(HOUR FROM timezone('America/Sao_Paulo', NOW())) >= 23 
-    THEN DATE(timezone('America/Sao_Paulo', NOW())) + INTERVAL '1 day'
-    ELSE DATE(timezone('America/Sao_Paulo', NOW()))
+    WHEN EXTRACT(HOUR FROM (NOW() AT TIME ZONE 'America/Sao_Paulo')) >= 23 
+    THEN DATE(NOW() AT TIME ZONE 'America/Sao_Paulo') + INTERVAL '1 day'
+    ELSE DATE(NOW() AT TIME ZONE 'America/Sao_Paulo')
   END
 `;
 
