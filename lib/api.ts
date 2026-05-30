@@ -53,28 +53,27 @@ export function formatRelativeTime(dateString: string): string {
 
 // Formata horário no timezone Brasil/São Paulo no formato "21:20hs"
 export function formatBrazilTime(dateString: string): string {
-  // A API retorna a data com "Z" (indicando UTC), mas o horário já está em 
-  // horário do Brasil. Por isso, removemos o "Z" e tratamos como horário local.
-  // Exemplo: "2026-05-09T17:50:50.256Z" -> o "17:50" já é o horário do Brasil
+  // A API salva com NOW() AT TIME ZONE 'America/Sao_Paulo', mas o PostgreSQL
+  // retorna como timestamp WITHOUT TIME ZONE. Quando o frontend recebe,
+  // ele pode interpretar como UTC se tiver "Z" ou como local.
+  // 
+  // Solução: sempre usar toLocaleString com timezone explícito para garantir
+  // a conversão correta independente de como a data chegou.
   
-  // Remove o Z do final se existir, para evitar conversão de timezone
-  const cleanDateString = dateString.replace('Z', '')
+  const date = new Date(dateString)
   
-  // Extrai hora e minuto diretamente da string ISO
-  const timePart = cleanDateString.split('T')[1]
-  if (timePart) {
-    const [hours, minutes] = timePart.split(':')
-    return `${hours}:${minutes}hs`
+  // Se a data for inválida, retorna fallback
+  if (isNaN(date.getTime())) {
+    return "--:--hs"
   }
   
-  // Fallback: se não conseguir extrair, usa o método padrão
-  const date = new Date(dateString)
   const options: Intl.DateTimeFormatOptions = {
     hour: '2-digit',
     minute: '2-digit',
     timeZone: 'America/Sao_Paulo',
     hour12: false
   }
+  
   const time = date.toLocaleTimeString('pt-BR', options)
   return `${time}hs`
 }
