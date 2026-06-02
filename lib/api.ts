@@ -53,30 +53,41 @@ export function formatRelativeTime(dateString: string): string {
 
 // Formata horário no timezone Brasil/São Paulo no formato "21:20hs"
 export function formatBrazilTime(dateString: string): string {
-  // A API retorna a data com "Z" (indicando UTC), mas o horário já está em 
-  // horário do Brasil. Por isso, removemos o "Z" e tratamos como horário local.
-  // Exemplo: "2026-05-09T17:50:50.256Z" -> o "17:50" já é o horário do Brasil
+  // A API insere com `NOW() AT TIME ZONE 'America/Sao_Paulo'`, então o horário
+  // já está em horário do Brasil. Porém, o PostgreSQL pode retornar de diferentes formas:
+  // 1. Com "Z" no final: "2026-05-09T17:50:50.256Z" 
+  // 2. Sem timezone: "2026-05-09T17:50:50.256"
+  // 3. Com offset: "2026-05-09T17:50:50.256-03:00"
   
-  // Remove o Z do final se existir, para evitar conversão de timezone
-  const cleanDateString = dateString.replace('Z', '')
+  // Em todos os casos, o horário na string JÁ É o horário do Brasil,
+  // então extraímos diretamente sem conversão de timezone
   
-  // Extrai hora e minuto diretamente da string ISO
-  const timePart = cleanDateString.split('T')[1]
-  if (timePart) {
-    const [hours, minutes] = timePart.split(':')
+  // Extrai a parte do tempo (após o T)
+  const match = dateString.match(/T(\d{2}):(\d{2})/)
+  if (match) {
+    const [, hours, minutes] = match
     return `${hours}:${minutes}hs`
   }
   
-  // Fallback: se não conseguir extrair, usa o método padrão
-  const date = new Date(dateString)
-  const options: Intl.DateTimeFormatOptions = {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'America/Sao_Paulo',
-    hour12: false
+  // Fallback para formatos não-ISO (ex: "17:50:50")
+  const timeOnlyMatch = dateString.match(/^(\d{2}):(\d{2})/)
+  if (timeOnlyMatch) {
+    const [, hours, minutes] = timeOnlyMatch
+    return `${hours}:${minutes}hs`
   }
-  const time = date.toLocaleTimeString('pt-BR', options)
-  return `${time}hs`
+  
+  // Último fallback: tenta extrair usando Date mas SEM conversão de timezone
+  // Cria a data removendo qualquer indicador de timezone para evitar conversão
+  const cleanDateString = dateString.replace(/Z$/, '').replace(/[+-]\d{2}:\d{2}$/, '')
+  const date = new Date(cleanDateString)
+  
+  if (!isNaN(date.getTime())) {
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${hours}:${minutes}hs`
+  }
+  
+  return dateString
 }
 
 export async function fetchRanking(period?: "day" | "all"): Promise<RankingPlayer[]> {
