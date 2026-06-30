@@ -129,7 +129,7 @@ const translations: Record<Language, Translations> = {
     
     // Weekly Charts
     vsWeekly: "VS Semanal",
-    f1Weekly: "F1 Semanal",
+    f1Weekly: "F1 — Top 10",
     weeklyVsScore: "Pontuação semanal de VS",
     lastF1MarkOfWeek: "Últimas marcações de F1 (Top 10)",
     
@@ -202,7 +202,7 @@ const translations: Record<Language, Translations> = {
     
     // Weekly Charts
     vsWeekly: "Weekly VS",
-    f1Weekly: "Weekly F1",
+    f1Weekly: "F1 — Top 10",
     weeklyVsScore: "Weekly VS score",
     lastF1MarkOfWeek: "Latest F1 marks (Top 10)",
     
