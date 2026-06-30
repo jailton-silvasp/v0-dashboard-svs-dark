@@ -66,6 +66,7 @@ interface Translations {
   cmdF1Desc: string
   cmdRankingDesc: string
   latestRecords: string
+  f1LatestMark: string
   noRecordsToday: string
   registered: string
   pointsLower: string
@@ -141,6 +142,7 @@ const translations: Record<Language, Translations> = {
     cmdF1Desc: "Registra sua pontuação no F1",
     cmdRankingDesc: "Mostra o ranking dos jogadores",
     latestRecords: "Últimos Registros",
+    f1LatestMark: "marcou no F1",
     noRecordsToday: "Nenhum registro hoje",
     registered: "registrou",
     pointsLower: "pontos",
@@ -214,6 +216,7 @@ const translations: Record<Language, Translations> = {
     cmdF1Desc: "Register your F1 score",
     cmdRankingDesc: "Shows player ranking",
     latestRecords: "Latest Records",
+    f1LatestMark: "marked in F1",
     noRecordsToday: "No records today",
     registered: "registered",
     pointsLower: "points",

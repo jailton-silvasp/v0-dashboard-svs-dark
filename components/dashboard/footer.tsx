@@ -1,7 +1,7 @@
 "use client"
 
-import { Swords, Info, Terminal, Clock, Crown, X, User } from "lucide-react"
-import { useRecentRecords } from "@/hooks/use-api"
+import { Swords, Info, Terminal, Clock, Crown, X, User, Flag } from "lucide-react"
+import { useRecentRecords, useF1Semanal } from "@/hooks/use-api"
 import { formatPoints, formatBrazilTime } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import Image from "next/image"
@@ -128,10 +128,14 @@ function RecordsModal({ isOpen, onClose, records, translations }: RecordsModalPr
 
 export function Footer() {
   const { records, isLoading } = useRecentRecords()
+  const { data: f1Data } = useF1Semanal()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { t } = useLanguage()
 
   const commands = getCommands(t)
+
+  // Marcação de F1 mais forte (o endpoint de ranking F1 não retorna horário)
+  const topF1 = [...(f1Data ?? [])].sort((a, b) => b.total - a.total)[0]
 
   return (
     <>
@@ -181,6 +185,16 @@ export function Footer() {
             <h4 className="text-[#c9a55c] font-semibold uppercase tracking-wide text-xs">{t.latestRecords}</h4>
           </div>
           <div className="space-y-2">
+            {topF1 && (
+              <div className="flex items-start gap-2 text-xs group cursor-pointer pb-2 mb-1 border-b border-[#2a2a2a]">
+                <Flag className="w-3 h-3 text-[#3b82f6] mt-0.5 shrink-0" />
+                <div className="flex-1">
+                  <p className="text-gray-400 group-hover:text-white transition-colors">
+                    {topF1.usuario} {t.f1LatestMark} {formatPoints(topF1.total)}
+                  </p>
+                </div>
+              </div>
+            )}
             {isLoading ? (
               [...Array(3)].map((_, i) => (
                 <div key={i} className="flex items-start gap-2">
