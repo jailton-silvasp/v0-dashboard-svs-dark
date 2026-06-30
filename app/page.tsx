@@ -45,7 +45,7 @@ export default function Dashboard() {
 
           {/* Weekly Charts */}
           <div className="mt-6">
-            <WeeklyCharts />
+            <WeeklyCharts selectedDate={selectedDate} />
           </div>
 
           {/* Footer */}

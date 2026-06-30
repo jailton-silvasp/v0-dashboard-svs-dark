@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts"
-import { useVsSemanal, useF1Semanal } from "@/hooks/use-api"
+import { useVsSemanal, useF1Semanal, useF1ByDate } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
@@ -138,10 +138,20 @@ function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, point
   )
 }
 
-export function WeeklyCharts() {
+interface WeeklyChartsProps {
+  selectedDate?: string | null
+}
+
+export function WeeklyCharts({ selectedDate }: WeeklyChartsProps) {
   const { ranking: vsSemanal, isLoading: isLoadingVs } = useVsSemanal()
-  const { ranking: f1Semanal, isLoading: isLoadingF1 } = useF1Semanal()
+  const { ranking: f1Geral, isLoading: isLoadingF1Geral } = useF1Semanal()
+  const { ranking: f1ByDate, isLoading: isLoadingF1ByDate } = useF1ByDate(selectedDate ?? null)
   const { t } = useLanguage()
+
+  // F1: quando uma data e selecionada, mostra a F1 registrada nessa data.
+  // Caso contrario, mostra a ultima pontuacao F1 informada por cada jogador.
+  const f1Ranking = selectedDate ? f1ByDate : f1Geral
+  const isLoadingF1 = selectedDate ? isLoadingF1ByDate : isLoadingF1Geral
 
   // VS: soma semanal de todas as marcacoes - ordenado em ordem decrescente
   const vsData: ChartData[] = [...vsSemanal]
@@ -152,8 +162,8 @@ export function WeeklyCharts() {
       points: p.total
     }))
 
-  // F1: ultima marcacao da semana - ordenado em ordem decrescente
-  const f1Data: ChartData[] = [...f1Semanal]
+  // F1: ultima pontuacao informada (ou da data selecionada) - ordem decrescente
+  const f1Data: ChartData[] = [...f1Ranking]
     .sort((a, b) => b.total - a.total)
     .slice(0, 10)
     .map(p => ({
@@ -177,7 +187,11 @@ export function WeeklyCharts() {
         icon={<Flag className="w-5 h-5 text-[#3b82f6]" />}
         data={f1Data}
         color="#3b82f6"
-        subtitle={t.lastF1MarkOfWeek}
+        subtitle={
+          selectedDate
+            ? `${t.lastF1MarkOfWeek} (${new Date(selectedDate + "T12:00:00").toLocaleDateString(t.dateLocale, { day: "2-digit", month: "2-digit", year: "numeric" })})`
+            : t.lastF1MarkOfWeek
+        }
         isLoading={isLoadingF1}
         pointsLabel={t.pointsLower}
       />

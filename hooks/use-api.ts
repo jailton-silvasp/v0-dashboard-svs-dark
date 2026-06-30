@@ -81,9 +81,33 @@ export function useVsSemanal() {
   }
 }
 
+// F1 Semanal: usa a ultima pontuacao F1 informada por cada jogador.
+// O endpoint /ranking?tipo=f1 nao zera na virada da semana, garantindo que o
+// card sempre exiba o ultimo valor registrado de cada jogador.
 export function useF1Semanal() {
   const { data, error, isLoading, mutate } = useSWR<RankingPlayer[]>(
-    `${API_URL}/ranking/semanal?tipo=f1`,
+    `${API_URL}/ranking?tipo=f1`,
+    fetcher,
+    {
+      refreshInterval: 30000,
+      revalidateOnFocus: true,
+    }
+  )
+
+  return {
+    ranking: data ?? [],
+    isLoading,
+    isError: error,
+    mutate,
+  }
+}
+
+// F1 por data: retorna a pontuacao F1 registrada na data selecionada
+export function useF1ByDate(date: string | null) {
+  const url = date ? `${API_URL}/ranking?period=day&tipo=f1&date=${date}` : null
+
+  const { data, error, isLoading, mutate } = useSWR<RankingPlayer[]>(
+    url,
     fetcher,
     {
       refreshInterval: 30000,
