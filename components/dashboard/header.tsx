@@ -132,6 +132,23 @@ export function Header() {
               </g>
             </svg>
           </button>
+          <button
+            onClick={() => setLanguage("es")}
+            className={`w-8 h-6 rounded overflow-hidden border-2 transition-all duration-200 ${
+              language === "es" 
+                ? "border-[#c9a55c] shadow-[0_0_8px_rgba(201,165,92,0.5)]" 
+                : "border-transparent opacity-60 hover:opacity-100"
+            }`}
+            title="Español (España)"
+            aria-label="Cambiar a Español"
+          >
+            <svg viewBox="0 0 32 22" className="w-full h-full">
+              <rect fill="#c60b1e" width="32" height="22"/>
+              <rect fill="#ffc400" y="5.5" width="32" height="11"/>
+              <rect fill="#c60b1e" x="6" y="9" width="3.5" height="4.5" rx="0.4"/>
+              <rect fill="#ad1519" x="6" y="8.2" width="3.5" height="1" rx="0.3"/>
+            </svg>
+          </button>
         </div>
 
         {/* Date/Time */}

@@ -99,7 +99,7 @@ export function useF1Semanal() {
   }
 }
 
-// Ranking semanal geral (VS) - reseta ao término do sábado
+// Ranking semanal geral (VS) - reseta toda segunda-feira 00:00 (America/Sao_Paulo)
 export function useRankingSemanalGeral() {
   const { data, error, isLoading, mutate } = useSWR<RankingPlayer[]>(
     `${API_URL}/ranking/semanal?tipo=vs`,

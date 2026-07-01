@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react"
 
-type Language = "pt" | "en"
+type Language = "pt" | "en" | "es"
 
 interface Translations {
   // Header
@@ -49,8 +49,11 @@ interface Translations {
   highestScoresOf: string
   latestRecordsOf: string
   today: string
+  thisWeek: string
   player: string
   noDataAvailable: string
+  highestPointsFull: string
+  lowestPointsFull: string
   
   // Weekly Charts
   vsWeekly: string
@@ -125,8 +128,11 @@ const translations: Record<Language, Translations> = {
     highestScoresOf: "Maiores pontuações de",
     latestRecordsOf: "Menores pontuações de",
     today: "hoje",
+    thisWeek: "esta semana",
     player: "Jogador",
     noDataAvailable: "Nenhum dado disponível",
+    highestPointsFull: "MAIORES PONTOS - COMPLETO",
+    lowestPointsFull: "MENORES PONTOS - COMPLETO",
     
     // Weekly Charts
     vsWeekly: "VS Semanal",
@@ -195,12 +201,15 @@ const translations: Record<Language, Translations> = {
     
     // Top Charts
     top10HighestPoints: "Top 10 Overall - Highest Points",
-    top10LatestPoints: "Top 10 Overall - Latest Points",
+    top10LatestPoints: "Top 10 Overall - Lowest Points",
     highestScoresOf: "Highest scores of",
-    latestRecordsOf: "Latest records of",
+    latestRecordsOf: "Lowest scores of",
     today: "today",
+    thisWeek: "this week",
     player: "Player",
     noDataAvailable: "No data available",
+    highestPointsFull: "HIGHEST POINTS - FULL",
+    lowestPointsFull: "LOWEST POINTS - FULL",
     
     // Weekly Charts
     vsWeekly: "Weekly VS",
@@ -228,6 +237,83 @@ const translations: Record<Language, Translations> = {
     // Date formatting
     dateLocale: "en-US",
   },
+  es: {
+    // Header
+    dashboard: "PANEL",
+    headerSubtitle: "Sigue el rendimiento de los jugadores en tiempo real.",
+    
+    // Metric Cards
+    vsToday: "VS HOY",
+    vsTotal: "VS TOTAL",
+    topScore: "MEJOR PUNTAJE",
+    players: "JUGADORES",
+    recordsRegistered: "Enfrentamientos registrados",
+    totalRecords: "Total de registros",
+    highestScore: "Mayor puntuación",
+    inRanking: "En el ranking",
+    
+    // MVP Card
+    mvpOfWeek: "MVP de la Semana",
+    points: "Puntos",
+    pts: "pts",
+    congratsPerformance: "¡Felicidades por el rendimiento!",
+    noMvpYet: "Aún no hay MVP",
+    
+    // VS Diario Filter
+    vsDaily: "VS Diario",
+    selectDate: "Selecciona la fecha:",
+    filter: "FILTRAR",
+    resultsOf: "Resultados de",
+    noRecordsForDate: "No se encontraron registros para esta fecha",
+    
+    // Top Ranking
+    top10Weekly: "TOP 10 SEMANAL",
+    reset: "Reinicio:",
+    days: "d",
+    viewFullRanking: "VER RANKING COMPLETO",
+    errorLoadingRanking: "Error al cargar el ranking",
+    noPlayersInRanking: "No hay jugadores en el ranking",
+    weeklyRankingFull: "RANKING SEMANAL COMPLETO",
+    totalPlayersInRanking: "Total de {count} jugadores en el ranking",
+    
+    // Top Charts
+    top10HighestPoints: "Top 10 General - Mayores Puntos",
+    top10LatestPoints: "Top 10 General - Menores Puntos",
+    highestScoresOf: "Mayores puntuaciones de",
+    latestRecordsOf: "Menores puntuaciones de",
+    today: "hoy",
+    thisWeek: "esta semana",
+    player: "Jugador",
+    noDataAvailable: "No hay datos disponibles",
+    highestPointsFull: "MAYORES PUNTOS - COMPLETO",
+    lowestPointsFull: "MENORES PUNTOS - COMPLETO",
+    
+    // Weekly Charts
+    vsWeekly: "VS Semanal",
+    f1Weekly: "F1 — Top 10",
+    weeklyVsScore: "Puntuación semanal de VS",
+    lastF1MarkOfWeek: "Últimas marcas de F1 (Top 10)",
+    
+    // Footer
+    about: "Acerca de",
+    aboutText: "Panel oficial ELO - S U P R E M O. ¡Sigue rankings, estadísticas y el rendimiento de los mejores jugadores!",
+    mainCommands: "Comandos Principales",
+    cmdVsDesc: "Registra tu puntuación en VS",
+    cmdF1Desc: "Registra tu puntuación en F1",
+    cmdRankingDesc: "Muestra el ranking de los jugadores",
+    latestRecords: "Últimos Registros",
+    f1LatestMark: "marcó en F1",
+    noRecordsToday: "Ningún registro hoy",
+    registered: "registró",
+    pointsLower: "puntos",
+    viewAll: "VER TODOS",
+    recordsOfToday: "REGISTROS DE HOY",
+    totalRecordsToday: "Total de {count} registros hoy",
+    developedBy: "developed by",
+    
+    // Date formatting
+    dateLocale: "es-ES",
+  },
 }
 
 interface LanguageContextType {
@@ -243,7 +329,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("language") as Language | null
-    if (saved && (saved === "pt" || saved === "en")) {
+    if (saved && (saved === "pt" || saved === "en" || saved === "es")) {
       setLanguage(saved)
     }
   }, [])

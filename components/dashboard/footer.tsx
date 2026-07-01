@@ -147,6 +147,9 @@ export function Footer() {
           <div className="flex items-center gap-2 mb-3">
             <Info className="w-4 h-4 text-[#c9a55c]" />
             <h4 className="text-white font-semibold uppercase tracking-wide text-xs">{t.about}</h4>
+            <span className="ml-auto text-[10px] font-semibold text-[#c9a55c] bg-[#c9a55c]/10 border border-[#c9a55c]/30 rounded-full px-2 py-0.5">
+              v3.0
+            </span>
           </div>
           <div className="flex items-start gap-3">
             <Image
