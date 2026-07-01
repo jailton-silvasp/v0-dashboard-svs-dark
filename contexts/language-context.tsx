@@ -49,8 +49,11 @@ interface Translations {
   highestScoresOf: string
   latestRecordsOf: string
   today: string
+  thisWeek: string
   player: string
   noDataAvailable: string
+  highestPointsFull: string
+  lowestPointsFull: string
   
   // Weekly Charts
   vsWeekly: string
@@ -125,8 +128,11 @@ const translations: Record<Language, Translations> = {
     highestScoresOf: "Maiores pontuações de",
     latestRecordsOf: "Menores pontuações de",
     today: "hoje",
+    thisWeek: "esta semana",
     player: "Jogador",
     noDataAvailable: "Nenhum dado disponível",
+    highestPointsFull: "MAIORES PONTOS - COMPLETO",
+    lowestPointsFull: "MENORES PONTOS - COMPLETO",
     
     // Weekly Charts
     vsWeekly: "VS Semanal",
@@ -195,12 +201,15 @@ const translations: Record<Language, Translations> = {
     
     // Top Charts
     top10HighestPoints: "Top 10 Overall - Highest Points",
-    top10LatestPoints: "Top 10 Overall - Latest Points",
+    top10LatestPoints: "Top 10 Overall - Lowest Points",
     highestScoresOf: "Highest scores of",
-    latestRecordsOf: "Latest records of",
+    latestRecordsOf: "Lowest scores of",
     today: "today",
+    thisWeek: "this week",
     player: "Player",
     noDataAvailable: "No data available",
+    highestPointsFull: "HIGHEST POINTS - FULL",
+    lowestPointsFull: "LOWEST POINTS - FULL",
     
     // Weekly Charts
     vsWeekly: "Weekly VS",
