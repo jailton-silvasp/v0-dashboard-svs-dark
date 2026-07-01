@@ -2,7 +2,7 @@
 
 import { Trophy, TrendingDown, User, X } from "lucide-react"
 import { useState } from "react"
-import { useRankingSemanalGeral } from "@/hooks/use-api"
+import { useRankingSemanalGeral, useRankingByDate } from "@/hooks/use-api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatPoints } from "@/lib/api"
 import { useLanguage } from "@/contexts/language-context"
@@ -209,12 +209,23 @@ function ChartModal({ isOpen, onClose, title, icon, data, playerLabel, pointsLab
   )
 }
 
-export function TopCharts() {
-  const { ranking, isLoading } = useRankingSemanalGeral()
+interface TopChartsProps {
+  selectedDate?: string | null
+}
+
+export function TopCharts({ selectedDate = null }: TopChartsProps) {
+  const { ranking: rankingSemanal, isLoading: isLoadingSemanal } = useRankingSemanalGeral()
+  const { ranking: rankingDia, isLoading: isLoadingDia } = useRankingByDate(selectedDate)
   const { t } = useLanguage()
   const [openModal, setOpenModal] = useState<"maiores" | "menores" | null>(null)
 
-  // Ordenacao base do ranking semanal completo (do maior para o menor)
+  // Sem data selecionada => ranking semanal (toda a semana).
+  // Com data selecionada => ranking daquele dia especifico.
+  const usingDate = !!selectedDate
+  const ranking = usingDate ? rankingDia : rankingSemanal
+  const isLoading = usingDate ? isLoadingDia : isLoadingSemanal
+
+  // Ordenacao base do ranking completo (do maior para o menor)
   const maioresFull: ChartData[] = [...ranking]
     .sort((a, b) => b.total - a.total)
     .map(p => ({
@@ -237,7 +248,9 @@ export function TopCharts() {
   const maioresPontosData = maioresFull.slice(0, 10)
   const menoresPontosData = menoresFull.slice(0, 10)
 
-  const dateLabel = t.thisWeek
+  const dateLabel = usingDate && selectedDate
+    ? new Date(selectedDate + "T00:00:00").toLocaleDateString("pt-BR")
+    : t.thisWeek
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

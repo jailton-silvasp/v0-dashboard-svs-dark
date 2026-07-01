@@ -40,7 +40,7 @@ export default function Dashboard() {
 
           {/* Top 10 Charts */}
           <div className="mt-6">
-            <TopCharts />
+            <TopCharts selectedDate={selectedDate} />
           </div>
 
           {/* Weekly Charts */}
