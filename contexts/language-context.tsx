@@ -150,7 +150,7 @@ const translations: Record<Language, Translations> = {
     weeklyVsPerformance: "Desempenho Semanal do VS",
     weeklyVsPerformanceSubtitle: "Total de VS por dia da semana",
     weekTotal: "Total da semana",
-    weekdaysShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+    weekdaysShort: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
     
     // Footer
     about: "Sobre",
@@ -233,7 +233,7 @@ const translations: Record<Language, Translations> = {
     weeklyVsPerformance: "Weekly VS Performance",
     weeklyVsPerformanceSubtitle: "Total VS per day of the week",
     weekTotal: "Week total",
-    weekdaysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    weekdaysShort: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     
     // Footer
     about: "About",
@@ -316,7 +316,7 @@ const translations: Record<Language, Translations> = {
     weeklyVsPerformance: "Rendimiento Semanal de VS",
     weeklyVsPerformanceSubtitle: "Total de VS por día de la semana",
     weekTotal: "Total de la semana",
-    weekdaysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+    weekdaysShort: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
     
     // Footer
     about: "Acerca de",

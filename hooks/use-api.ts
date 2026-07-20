@@ -118,8 +118,8 @@ export function useRankingSemanalGeral() {
   }
 }
 
-// Retorna as 7 datas (ISO YYYY-MM-DD) da semana atual (domingo a sábado),
-// alinhado ao reset semanal do ranking (sábado 23h Brasília = fim do ciclo).
+// Retorna as 6 datas (ISO YYYY-MM-DD) do ciclo atual do VS (segunda a sábado).
+// Domingo é folga (sem atividade). O ciclo encerra no sábado 23h Brasília.
 export function getWeekDates(): string[] {
   const now = new Date()
   // "Agora" no fuso de Brasília
@@ -141,14 +141,14 @@ export function getWeekDates(): string[] {
   const endSaturday = new Date(spNow)
   endSaturday.setDate(spNow.getDate() + daysUntilSaturday)
 
-  // Domingo que inicia o ciclo (6 dias antes do sábado)
-  const startSunday = new Date(endSaturday)
-  startSunday.setDate(endSaturday.getDate() - 6)
+  // Segunda-feira que inicia o ciclo (5 dias antes do sábado)
+  const startMonday = new Date(endSaturday)
+  startMonday.setDate(endSaturday.getDate() - 5)
 
   const dates: string[] = []
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(startSunday)
-    d.setDate(startSunday.getDate() + i)
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(startMonday)
+    d.setDate(startMonday.getDate() + i)
     const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
     dates.push(iso)
   }
