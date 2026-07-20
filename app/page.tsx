@@ -8,6 +8,7 @@ import { VsDiarioFilter } from "@/components/dashboard/vs-diario-filter"
 import { TopRanking } from "@/components/dashboard/top-ranking"
 import { TopCharts } from "@/components/dashboard/top-charts"
 import { WeeklyCharts } from "@/components/dashboard/weekly-charts"
+import { WeeklyVsPerformance } from "@/components/dashboard/weekly-vs-performance"
 import { Footer } from "@/components/dashboard/footer"
 
 export default function Dashboard() {
@@ -41,6 +42,11 @@ export default function Dashboard() {
           {/* Top 10 Charts */}
           <div className="mt-6">
             <TopCharts selectedDate={selectedDate} />
+          </div>
+
+          {/* Weekly VS Performance */}
+          <div className="mt-6">
+            <WeeklyVsPerformance />
           </div>
 
           {/* Weekly Charts */}
