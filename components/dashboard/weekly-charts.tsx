@@ -155,7 +155,7 @@ export function WeeklyCharts() {
   // F1: ultima marcacao da semana - ordenado em ordem decrescente
   const f1Data: ChartData[] = [...f1Semanal]
     .sort((a, b) => b.total - a.total)
-    .slice(0, 10)
+    .slice(0, 15)
     .map(p => ({
       name: p.usuario,
       points: p.total

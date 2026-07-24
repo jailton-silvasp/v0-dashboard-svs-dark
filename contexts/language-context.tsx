@@ -142,9 +142,9 @@ const translations: Record<Language, Translations> = {
     
     // Weekly Charts
     vsWeekly: "VS Semanal",
-    f1Weekly: "F1 — Top 10",
+    f1Weekly: "F1 — Top 15",
     weeklyVsScore: "Pontuação semanal de VS",
-    lastF1MarkOfWeek: "Últimas marcações de F1 (Top 10)",
+    lastF1MarkOfWeek: "Últimas marcações de F1 (Top 15)",
 
     // Weekly VS Performance
     weeklyVsPerformance: "Desempenho Semanal do VS",
@@ -225,9 +225,9 @@ const translations: Record<Language, Translations> = {
     
     // Weekly Charts
     vsWeekly: "Weekly VS",
-    f1Weekly: "F1 — Top 10",
+    f1Weekly: "F1 — Top 15",
     weeklyVsScore: "Weekly VS score",
-    lastF1MarkOfWeek: "Latest F1 marks (Top 10)",
+    lastF1MarkOfWeek: "Latest F1 marks (Top 15)",
 
     // Weekly VS Performance
     weeklyVsPerformance: "Weekly VS Performance",
@@ -308,9 +308,9 @@ const translations: Record<Language, Translations> = {
     
     // Weekly Charts
     vsWeekly: "VS Semanal",
-    f1Weekly: "F1 — Top 10",
+    f1Weekly: "F1 — Top 15",
     weeklyVsScore: "Puntuación semanal de VS",
-    lastF1MarkOfWeek: "Últimas marcas de F1 (Top 10)",
+    lastF1MarkOfWeek: "Últimas marcas de F1 (Top 15)",
 
     // Weekly VS Performance
     weeklyVsPerformance: "Rendimiento Semanal de VS",
