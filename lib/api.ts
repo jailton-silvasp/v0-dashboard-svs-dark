@@ -19,8 +19,10 @@ export interface DashboardData {
 export interface RecentRecord {
   usuario: string
   valor: number
-  criado_em: string
+  data?: string
+  criado_em?: string
   avatar_url?: string
+  estrutura?: "Principal" | "Academy"
 }
 
 // Formata pontos (2.84G, 789M, 1.50K...)
