@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { Header } from "@/components/dashboard/header"
 import { MetricCards } from "@/components/dashboard/metric-cards"
 import { MVPCard } from "@/components/dashboard/mvp-card"
@@ -11,7 +11,7 @@ import { WeeklyCharts } from "@/components/dashboard/weekly-charts"
 import { WeeklyVsPerformance } from "@/components/dashboard/weekly-vs-performance"
 import { Footer } from "@/components/dashboard/footer"
 
-export default function Dashboard() {
+function DashboardContent() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   return (
@@ -59,5 +59,13 @@ export default function Dashboard() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={null}>
+      <DashboardContent />
+    </Suspense>
   )
 }

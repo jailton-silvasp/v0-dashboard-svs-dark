@@ -107,7 +107,7 @@ function RecordsModal({ isOpen, onClose, records, translations }: RecordsModalPr
                   </span>
 
                   <span className="text-gray-400 text-sm text-right">
-                    {formatBrazilTime(record.criado_em)}
+{formatBrazilTime(record.criado_em ?? record.data)}
                   </span>
                 </div>
               ))
