@@ -7,13 +7,14 @@ export interface RankingPlayer {
   avatar_url?: string
 }
 
+export interface DashboardEntry extends RankingPlayer {
+  estrutura?: "Principal" | "Academy"
+}
+
 export interface DashboardData {
-  hoje: number
-  total: number
-  ranking: {
-    usuario: string
-    total: number
-  }[]
+  vs: DashboardEntry[]
+  f1: DashboardEntry[]
+  recentes: RecentRecord[]
 }
 
 export interface RecentRecord {
@@ -26,17 +27,23 @@ export interface RecentRecord {
 }
 
 // Formata pontos (2.84G, 789M, 1.50K...)
-export function formatPoints(value: number): string {
-  if (value >= 1_000_000_000) {
-    return `${(value / 1_000_000_000).toFixed(2)}G`
+export function toFiniteNumber(value: unknown): number {
+  const parsed = typeof value === "number" ? value : Number(value)
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+export function formatPoints(value: unknown): string {
+  const amount = toFiniteNumber(value)
+  if (amount >= 1_000_000_000) {
+    return `${(amount / 1_000_000_000).toFixed(2)}G`
   }
-  if (value >= 1_000_000) {
-    return `${(value / 1_000_000).toFixed(2)}M`
+  if (amount >= 1_000_000) {
+    return `${(amount / 1_000_000).toFixed(2)}M`
   }
-  if (value >= 1_000) {
-    return `${(value / 1_000).toFixed(2)}K`
+  if (amount >= 1_000) {
+    return `${(amount / 1_000).toFixed(2)}K`
   }
-  return value.toFixed(0)
+  return amount.toFixed(0)
 }
 
 // Tempo relativo

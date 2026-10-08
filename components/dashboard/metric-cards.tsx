@@ -2,7 +2,7 @@
 
 import { Swords, Trophy, Flag, Users } from "lucide-react"
 import { useDashboard, useRanking } from "@/hooks/use-api"
-import { formatPoints } from "@/lib/api"
+import { formatPoints, toFiniteNumber } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
@@ -12,33 +12,36 @@ export function MetricCards() {
   const { t } = useLanguage()
 
   const isLoading = isLoadingDashboard || isLoadingRanking
+  const vsTotal = dashboardData?.vs ?? []
+  const totalVs = vsTotal.reduce((sum, player) => sum + toFiniteNumber(player.total), 0)
+  const topScore = vsTotal[0]?.total ?? 0
 
   const metrics = [
     {
       icon: Swords,
       label: t.vsToday,
-      value: dashboardData?.hoje ?? 0,
+      value: ranking.reduce((sum, player) => sum + toFiniteNumber(player.total), 0),
       subtitle: t.recordsRegistered,
       iconColor: "text-[#c9a55c]",
     },
     {
       icon: Trophy,
       label: t.vsTotal,
-      value: dashboardData?.total ?? 0,
+      value: totalVs,
       subtitle: t.totalRecords,
       iconColor: "text-[#c9a55c]",
     },
     {
       icon: Flag,
       label: t.topScore,
-      value: ranking.length > 0 ? Math.round(ranking[0]?.total ?? 0) : 0,
+      value: topScore,
       subtitle: t.highestScore,
       iconColor: "text-[#3b82f6]",
     },
     {
       icon: Users,
       label: t.players,
-      value: ranking.length,
+      value: vsTotal.length,
       subtitle: t.inRanking,
       iconColor: "text-[#3b82f6]",
     },

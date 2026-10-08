@@ -13,7 +13,7 @@ import {
   Cell,
 } from "recharts"
 import { useVsEvolucaoSemanal, getWeekDates } from "@/hooks/use-api"
-import { formatPoints } from "@/lib/api"
+import { formatPoints, toFiniteNumber } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
@@ -43,7 +43,7 @@ export function WeeklyVsPerformance() {
     isToday: d.date === todayIso,
   }))
 
-  const weekTotal = data.reduce((sum, d) => sum + d.total, 0)
+  const weekTotal = data.reduce((sum, d) => sum + toFiniteNumber(d.total), 0)
   const maxPoints = chartData.length > 0 ? Math.max(...chartData.map((d) => d.points), 1) : 1
   const yAxisMax = Math.ceil(maxPoints * 1.2)
 
