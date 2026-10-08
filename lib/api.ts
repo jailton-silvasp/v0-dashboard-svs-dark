@@ -7,13 +7,14 @@ export interface RankingPlayer {
   avatar_url?: string
 }
 
+export interface DashboardEntry extends RankingPlayer {
+  estrutura?: "Principal" | "Academy"
+}
+
 export interface DashboardData {
-  hoje: number
-  total: number
-  ranking: {
-    usuario: string
-    total: number
-  }[]
+  vs: DashboardEntry[]
+  f1: DashboardEntry[]
+  recentes: RecentRecord[]
 }
 
 export interface RecentRecord {

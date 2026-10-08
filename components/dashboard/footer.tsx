@@ -107,7 +107,7 @@ function RecordsModal({ isOpen, onClose, records, translations }: RecordsModalPr
                   </span>
 
                   <span className="text-gray-400 text-sm text-right">
-{formatBrazilTime(record.criado_em ?? record.data)}
+{formatBrazilTime(record.criado_em)}
                   </span>
                 </div>
               ))
@@ -128,7 +128,7 @@ function RecordsModal({ isOpen, onClose, records, translations }: RecordsModalPr
 
 export function Footer() {
   const { records, isLoading } = useRecentRecords()
-  const { data: f1Data } = useF1Semanal()
+  const { ranking: f1Data } = useF1Semanal()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { t } = useLanguage()
 
@@ -249,7 +249,7 @@ export function Footer() {
     <RecordsModal 
       isOpen={isModalOpen} 
       onClose={() => setIsModalOpen(false)} 
-      records={records}
+      records={records.map((record) => ({ ...record, criado_em: record.criado_em ?? "" }))}
       translations={{
         recordsOfToday: t.recordsOfToday,
         player: t.player,

@@ -3,11 +3,24 @@
 import { Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useLanguage } from "@/contexts/language-context"
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const estrutura = searchParams.get("estrutura")
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
+
+  const changeEstrutura = (value?: "Principal" | "Academy") => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (value) params.set("estrutura", value)
+    else params.delete("estrutura")
+    const query = params.toString()
+    router.push(`${pathname}${query ? `?${query}` : ""}`)
+  }
 
   useEffect(() => {
     setCurrentTime(new Date())
@@ -74,7 +87,7 @@ export function Header() {
               <rect fill="#009c3b" width="32" height="22"/>
               <polygon fill="#ffdf00" points="16,2 30,11 16,20 2,11"/>
               <circle fill="#002776" cx="16" cy="11" r="5"/>
-              <path fill="#fff" d="M11.5,11 Q16,8 20.5,11" stroke="#fff" strokeWidth="0.5" fill="none"/>
+              <path d="M11.5,11 Q16,8 20.5,11" stroke="#fff" strokeWidth="0.5" fill="none"/>
             </svg>
           </button>
           <button
@@ -149,6 +162,23 @@ export function Header() {
               <rect fill="#ad1519" x="6" y="8.2" width="3.5" height="1" rx="0.3"/>
             </svg>
           </button>
+        </div>
+
+        <div className="flex items-center gap-1 rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] p-1" aria-label="Selecionar estrutura">
+          {[{ label: "Geral" }, { label: "Principal" }, { label: "Academy" }].map(({ label }) => {
+            const active = label === "Geral" ? !estrutura : estrutura === label
+            return (
+              <button
+                key={label}
+                type="button"
+                onClick={() => changeEstrutura(label === "Geral" ? undefined : label as "Principal" | "Academy")}
+                className={`rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors ${active ? "bg-[#c9a55c] text-[#0d0d0d]" : "text-gray-400 hover:text-white"}`}
+                aria-pressed={active}
+              >
+                {label}
+              </button>
+            )
+          })}
         </div>
 
         {/* Date/Time */}

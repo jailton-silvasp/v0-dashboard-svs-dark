@@ -181,8 +181,9 @@ export interface DayVsTotal {
 
 // Agrega o total de VS por dia da semana fazendo 7 chamadas ao ranking diário
 export function useVsEvolucaoSemanal() {
+  const estrutura = useEstrutura()
   const dates = getWeekDates()
-  const key = `vs-evolucao-semanal-${dates[0]}`
+  const key = `vs-evolucao-semanal-${dates[0]}-${estrutura ?? "geral"}`
 
   const { data, error, isLoading, mutate } = useSWR<DayVsTotal[]>(
     key,
@@ -190,7 +191,8 @@ export function useVsEvolucaoSemanal() {
       const results = await Promise.all(
         dates.map(async (date): Promise<DayVsTotal> => {
           try {
-            const res = await fetch(`${API_URL}/ranking?period=day&date=${date}`)
+            const url = withEstrutura(`${API_URL}/ranking?period=day&date=${date}`, estrutura)
+            const res = await fetch(url)
             if (!res.ok) return { date, total: 0 }
             const players: RankingPlayer[] = await res.json()
             const total = Array.isArray(players)
