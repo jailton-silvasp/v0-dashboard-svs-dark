@@ -65,7 +65,12 @@ export function Header() {
         <div className="hidden sm:block h-10 w-px bg-[#2a2a2a] mx-2" />
         
         <div className="hidden sm:block">
-          <h2 className="text-xl font-bold text-white tracking-wide">{t.dashboard}</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold text-white tracking-wide">{t.dashboard}</h2>
+            <span className="rounded-full border border-[#c9a55c]/50 bg-[#c9a55c]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#c9a55c]">
+              {estrutura ?? "Geral"}
+            </span>
+          </div>
           <p className="text-gray-500 text-xs">{t.headerSubtitle}</p>
         </div>
       </div>
