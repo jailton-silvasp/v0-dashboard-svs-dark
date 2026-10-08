@@ -52,7 +52,11 @@ export function formatRelativeTime(dateString: string): string {
 }
 
 // Formata horário no timezone Brasil/São Paulo no formato "21:20hs"
-export function formatBrazilTime(dateString: string): string {
+export function formatBrazilTime(dateString: string | null | undefined): string {
+  if (!dateString) {
+    return "—"
+  }
+
   // A API retorna o timestamp em UTC (ex: "2026-05-09T20:36:50.256Z").
   // Convertemos esse instante para o fuso de Brasília (America/Sao_Paulo, UTC-3).
   // Formatos possíveis vindos do PostgreSQL:
