@@ -148,7 +148,7 @@ export function Footer() {
             <Info className="w-4 h-4 text-[#c9a55c]" />
             <h4 className="text-white font-semibold uppercase tracking-wide text-xs">{t.about}</h4>
             <span className="ml-auto text-[10px] font-semibold text-[#c9a55c] bg-[#c9a55c]/10 border border-[#c9a55c]/30 rounded-full px-2 py-0.5">
-              v3.0
+              v4.0
             </span>
           </div>
           <div className="flex items-start gap-3">
@@ -240,7 +240,7 @@ export function Footer() {
           <span className="text-gray-600 text-xs">{t.developedBy}</span>
           <div className="flex items-center gap-1">
             <Crown className="w-4 h-4 text-[#c9a55c]" />
-            <span className="text-[#c9a55c] font-bold text-sm tracking-wider">{"『PRΞDΔDΩR』"}</span>
+            <span className="text-[#c9a55c] font-bold text-sm tracking-wider">{"『PRΞDΛDΩR』"}</span>
           </div>
         </div>
       </div>
