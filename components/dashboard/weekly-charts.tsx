@@ -12,7 +12,7 @@ import {
   LabelList,
 } from "recharts"
 import { useVsSemanal, useF1Semanal } from "@/hooks/use-api"
-import { formatPoints } from "@/lib/api"
+import { formatPoints, toFiniteNumber } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
@@ -145,20 +145,20 @@ export function WeeklyCharts() {
 
   // VS: soma semanal de todas as marcacoes - ordenado em ordem decrescente
   const vsData: ChartData[] = [...vsSemanal]
-    .sort((a, b) => b.total - a.total)
+    .sort((a, b) => toFiniteNumber(b.total) - toFiniteNumber(a.total))
     .slice(0, 10)
     .map(p => ({
       name: p.usuario,
-      points: p.total
+      points: toFiniteNumber(p.total)
     }))
 
   // F1: ultima marcacao da semana - ordenado em ordem decrescente
   const f1Data: ChartData[] = [...f1Semanal]
-    .sort((a, b) => b.total - a.total)
+    .sort((a, b) => toFiniteNumber(b.total) - toFiniteNumber(a.total))
     .slice(0, 15)
     .map(p => ({
       name: p.usuario,
-      points: p.total
+      points: toFiniteNumber(p.total)
     }))
 
   return (

@@ -2,7 +2,7 @@
 
 import useSWR from "swr"
 import { useSearchParams } from "next/navigation"
-import { API_URL, fetcher, type RankingPlayer, type DashboardData, type RecentRecord } from "@/lib/api"
+import { API_URL, fetcher, toFiniteNumber, type RankingPlayer, type DashboardData, type RecentRecord } from "@/lib/api"
 
 export type Estrutura = "Principal" | "Academy"
 
@@ -196,7 +196,7 @@ export function useVsEvolucaoSemanal() {
             if (!res.ok) return { date, total: 0 }
             const players: RankingPlayer[] = await res.json()
             const total = Array.isArray(players)
-              ? players.reduce((sum, p) => sum + (p.total || 0), 0)
+              ? players.reduce((sum, p) => sum + toFiniteNumber(p.total), 0)
               : 0
             return { date, total }
           } catch {

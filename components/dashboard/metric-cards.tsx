@@ -2,7 +2,7 @@
 
 import { Swords, Trophy, Flag, Users } from "lucide-react"
 import { useDashboard, useRanking } from "@/hooks/use-api"
-import { formatPoints } from "@/lib/api"
+import { formatPoints, toFiniteNumber } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
@@ -13,14 +13,14 @@ export function MetricCards() {
 
   const isLoading = isLoadingDashboard || isLoadingRanking
   const vsTotal = dashboardData?.vs ?? []
-  const totalVs = vsTotal.reduce((sum, player) => sum + Number(player.total || 0), 0)
+  const totalVs = vsTotal.reduce((sum, player) => sum + toFiniteNumber(player.total), 0)
   const topScore = vsTotal[0]?.total ?? 0
 
   const metrics = [
     {
       icon: Swords,
       label: t.vsToday,
-      value: ranking.reduce((sum, player) => sum + Number(player.total || 0), 0),
+      value: ranking.reduce((sum, player) => sum + toFiniteNumber(player.total), 0),
       subtitle: t.recordsRegistered,
       iconColor: "text-[#c9a55c]",
     },
