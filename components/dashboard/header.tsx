@@ -3,24 +3,11 @@
 import { Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useLanguage } from "@/contexts/language-context"
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage()
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const estrutura = searchParams.get("estrutura")
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
-
-  const changeEstrutura = (value?: "Principal" | "Academy") => {
-    const params = new URLSearchParams(searchParams.toString())
-    if (value) params.set("estrutura", value)
-    else params.delete("estrutura")
-    const query = params.toString()
-    router.push(`${pathname}${query ? `?${query}` : ""}`)
-  }
 
   useEffect(() => {
     setCurrentTime(new Date())
@@ -67,9 +54,6 @@ export function Header() {
         <div className="hidden sm:block">
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-bold text-white tracking-wide">{t.dashboard}</h2>
-            <span className="rounded-full border border-[#c9a55c]/50 bg-[#c9a55c]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#c9a55c]">
-              {estrutura ?? "Geral"}
-            </span>
           </div>
           <p className="text-gray-500 text-xs">{t.headerSubtitle}</p>
         </div>
@@ -167,23 +151,6 @@ export function Header() {
               <rect fill="#ad1519" x="6" y="8.2" width="3.5" height="1" rx="0.3"/>
             </svg>
           </button>
-        </div>
-
-        <div className="flex items-center gap-1 rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] p-1" aria-label="Selecionar estrutura">
-          {[{ label: "Geral" }, { label: "Principal" }, { label: "Academy" }].map(({ label }) => {
-            const active = label === "Geral" ? !estrutura : estrutura === label
-            return (
-              <button
-                key={label}
-                type="button"
-                onClick={() => changeEstrutura(label === "Geral" ? undefined : label as "Principal" | "Academy")}
-                className={`rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors ${active ? "bg-[#c9a55c] text-[#0d0d0d]" : "text-gray-400 hover:text-white"}`}
-                aria-pressed={active}
-              >
-                {label}
-              </button>
-            )
-          })}
         </div>
 
         {/* Date/Time */}
