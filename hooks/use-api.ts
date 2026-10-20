@@ -1,24 +1,10 @@
 "use client"
 
 import useSWR from "swr"
-import { useSearchParams } from "next/navigation"
 import { API_URL, fetcher, toFiniteNumber, type RankingPlayer, type DashboardData, type RecentRecord } from "@/lib/api"
 
-export type Estrutura = "Principal" | "Academy"
-
-function useEstrutura() {
-  const searchParams = useSearchParams()
-  const value = searchParams.get("estrutura")
-  return value === "Principal" || value === "Academy" ? value : undefined
-}
-
-function withEstrutura(url: string, estrutura?: Estrutura) {
-  return estrutura ? `${url}${url.includes("?") ? "&" : "?"}estrutura=${encodeURIComponent(estrutura)}` : url
-}
-
 export function useRanking(period?: "day" | "all") {
-  const estrutura = useEstrutura()
-  const url = withEstrutura(period ? `${API_URL}/ranking?period=${period}` : `${API_URL}/ranking`, estrutura)
+  const url = period ? `${API_URL}/ranking?period=${period}` : `${API_URL}/ranking`
   
   const { data, error, isLoading, mutate } = useSWR<RankingPlayer[]>(url, fetcher, {
     refreshInterval: 30000, // Atualiza a cada 30 segundos
@@ -34,9 +20,8 @@ export function useRanking(period?: "day" | "all") {
 }
 
 export function useDashboard() {
-  const estrutura = useEstrutura()
   const { data, error, isLoading, mutate } = useSWR<DashboardData>(
-    withEstrutura(`${API_URL}/dashboard`, estrutura),
+    `${API_URL}/dashboard`,
     fetcher,
     {
       refreshInterval: 30000,
@@ -61,9 +46,8 @@ export function useRankingGeral() {
 }
 
 export function useRecentRecords() {
-  const estrutura = useEstrutura()
   const { data, error, isLoading, mutate } = useSWR<RecentRecord[]>(
-    withEstrutura(`${API_URL}/recentes`, estrutura),
+    `${API_URL}/recentes`,
     fetcher,
     {
       refreshInterval: 30000,
@@ -80,9 +64,8 @@ export function useRecentRecords() {
 }
 
 export function useVsSemanal() {
-  const estrutura = useEstrutura()
   const { data, error, isLoading, mutate } = useSWR<{ vs: RankingPlayer[] } | RankingPlayer[]>(
-    withEstrutura(`${API_URL}/ranking/semanal?tipo=vs`, estrutura),
+    `${API_URL}/ranking/semanal?tipo=vs`,
     fetcher,
     {
       refreshInterval: 30000,
@@ -99,9 +82,8 @@ export function useVsSemanal() {
 }
 
 export function useF1Semanal() {
-  const estrutura = useEstrutura()
   const { data, error, isLoading, mutate } = useSWR<{ f1: RankingPlayer[] } | RankingPlayer[]>(
-    withEstrutura(`${API_URL}/ranking/semanal?tipo=f1`, estrutura),
+    `${API_URL}/ranking/semanal?tipo=f1`,
     fetcher,
     {
       refreshInterval: 30000,
@@ -119,9 +101,8 @@ export function useF1Semanal() {
 
 // Ranking semanal geral (VS) - reseta toda segunda-feira 00:00 (America/Sao_Paulo)
 export function useRankingSemanalGeral() {
-  const estrutura = useEstrutura()
   const { data, error, isLoading, mutate } = useSWR<{ vs: RankingPlayer[] } | RankingPlayer[]>(
-    withEstrutura(`${API_URL}/ranking/semanal?tipo=vs`, estrutura),
+    `${API_URL}/ranking/semanal?tipo=vs`,
     fetcher,
     {
       refreshInterval: 30000,
@@ -181,9 +162,8 @@ export interface DayVsTotal {
 
 // Agrega o total de VS por dia da semana fazendo 7 chamadas ao ranking diário
 export function useVsEvolucaoSemanal() {
-  const estrutura = useEstrutura()
   const dates = getWeekDates()
-  const key = `vs-evolucao-semanal-${dates[0]}-${estrutura ?? "geral"}`
+  const key = `vs-evolucao-semanal-${dates[0]}`
 
   const { data, error, isLoading, mutate } = useSWR<DayVsTotal[]>(
     key,
@@ -191,7 +171,7 @@ export function useVsEvolucaoSemanal() {
       const results = await Promise.all(
         dates.map(async (date): Promise<DayVsTotal> => {
           try {
-            const url = withEstrutura(`${API_URL}/ranking?period=day&date=${date}`, estrutura)
+            const url = `${API_URL}/ranking?period=day&date=${date}`
             const res = await fetch(url)
             if (!res.ok) return { date, total: 0 }
             const players: RankingPlayer[] = await res.json()
@@ -221,8 +201,7 @@ export function useVsEvolucaoSemanal() {
 }
 
 export function useRankingByDate(date: string | null) {
-  const estrutura = useEstrutura()
-  const url = date ? withEstrutura(`${API_URL}/ranking?period=day&date=${date}`, estrutura) : null
+  const url = date ? `${API_URL}/ranking?period=day&date=${date}` : null
   
   const { data, error, isLoading, mutate } = useSWR<RankingPlayer[]>(
     url,
