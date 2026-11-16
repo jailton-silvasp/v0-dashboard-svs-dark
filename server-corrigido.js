@@ -226,7 +226,7 @@ app.get("/ranking/semanal", async (req, res) => {
           discord_id,
           valor::float as total
         FROM f1_registros
-        WHERE created_at >= (
+        WHERE criado_em >= (
           date_trunc('week', timezone('America/Sao_Paulo', NOW()))
           + CASE
               WHEN EXTRACT(ISODOW FROM timezone('America/Sao_Paulo', NOW())) >= 5
