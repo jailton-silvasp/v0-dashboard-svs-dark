@@ -226,7 +226,14 @@ app.get("/ranking/semanal", async (req, res) => {
           discord_id,
           valor::float as total
         FROM f1_registros
-        WHERE created_at >= date_trunc('week', timezone('America/Sao_Paulo', NOW()))
+        WHERE created_at >= (
+          date_trunc('week', timezone('America/Sao_Paulo', NOW()))
+          + CASE
+              WHEN EXTRACT(ISODOW FROM timezone('America/Sao_Paulo', NOW())) >= 5
+              THEN INTERVAL '4 days'
+              ELSE INTERVAL '-3 days'
+            END
+        )
         ORDER BY discord_id, created_at DESC
       `;
     } else {
