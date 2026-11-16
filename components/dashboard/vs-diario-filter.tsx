@@ -17,12 +17,14 @@ function getServerDate(): string {
   
   // Se for apos 23h, considera como proximo dia
   if (hour >= 23) {
-    const nextDay = new Date(brasilNow)
-    nextDay.setDate(nextDay.getDate() + 1)
-    return nextDay.toISOString().split('T')[0]
+    brasilNow.setDate(brasilNow.getDate() + 1)
   }
-  
-  return brasilNow.toISOString().split('T')[0]
+
+  // Formata a data no fuso local sem converter o instante para UTC.
+  const year = brasilNow.getFullYear()
+  const month = String(brasilNow.getMonth() + 1).padStart(2, "0")
+  const day = String(brasilNow.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
 }
 
 interface VsDiarioFilterProps {
