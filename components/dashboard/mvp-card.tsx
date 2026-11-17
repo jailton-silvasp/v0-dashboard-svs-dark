@@ -1,11 +1,12 @@
 "use client"
 
-import { Crown, User } from "lucide-react"
+import { Crown } from "lucide-react"
 
 import { useVsSemanal } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
+import { PlayerAvatar } from "@/components/dashboard/player-avatar"
 
 export function MVPCard() {
   const { ranking, isLoading, isError } = useVsSemanal()
@@ -44,19 +45,12 @@ export function MVPCard() {
       <div className="flex flex-col items-center">
         {/* Avatar */}
         <div className="relative mb-4">
-          <div className="w-28 h-28 rounded-full border-4 border-[#c9a55c] bg-[#2a2a2a] flex items-center justify-center overflow-hidden">
-            {mvp?.avatar_url ? (
-              <img
-                src={mvp.avatar_url}
-                alt={mvp.usuario}
-                width={112}
-                height={112}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <User className="w-16 h-16 text-gray-600" />
-            )}
-          </div>
+          <PlayerAvatar
+            src={mvp?.avatar_url}
+            name={mvp?.usuario ?? "Jogador"}
+            size={112}
+            className="border-4 border-[#c9a55c]"
+          />
           <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#c9a55c] text-[#0d0d0d] w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg">
             1
           </div>
