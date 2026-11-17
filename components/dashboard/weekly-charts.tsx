@@ -82,7 +82,7 @@ function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, isErr
         </h3>
       </div>
 
-      {isError ? (
+      {isError && data.length === 0 ? (
         <div className="h-[250px] flex items-center justify-center"><p className="text-gray-500 text-sm">{errorText}</p></div>
       ) : data.length === 0 ? (
         <div className="h-[250px] flex items-center justify-center">
