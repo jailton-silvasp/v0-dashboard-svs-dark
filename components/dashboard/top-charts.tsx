@@ -24,13 +24,14 @@ interface ChartProps {
   playerLabel: string
   pointsLabel: string
   noDataText: string
+  isError?: boolean
   invertBarScale?: boolean // Para menores pontos, inverte a escala das barras
   onViewFull: () => void
   viewFullLabel: string
   hasData: boolean
 }
 
-function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, playerLabel, pointsLabel, noDataText, invertBarScale, onViewFull, viewFullLabel, hasData }: ChartProps) {
+function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, isError, playerLabel, pointsLabel, noDataText, invertBarScale, onViewFull, viewFullLabel, hasData }: ChartProps) {
   // Para menores pontos, usa o maior valor do array para calcular proporção das barras
   const maxPoints = data.length > 0
     ? (invertBarScale ? Math.max(...data.map(d => d.points)) : data[0].points)
@@ -64,6 +65,8 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, pla
               <Skeleton className="w-10 h-4 bg-[#2a2a2a] ml-auto" />
             </div>
           ))
+        ) : isError ? (
+          <div className="text-center py-4 text-gray-500 text-sm">{"Erro ao carregar ranking"}</div>
         ) : data.length === 0 ? (
           <div className="text-center py-4 text-gray-500 text-sm">
             {noDataText}
@@ -214,8 +217,8 @@ interface TopChartsProps {
 }
 
 export function TopCharts({ selectedDate = null }: TopChartsProps) {
-  const { ranking: rankingSemanal, isLoading: isLoadingSemanal } = useRankingSemanalGeral()
-  const { ranking: rankingDia, isLoading: isLoadingDia } = useRankingByDate(selectedDate)
+  const { ranking: rankingSemanal, isLoading: isLoadingSemanal, isError: isErrorSemanal } = useRankingSemanalGeral()
+  const { ranking: rankingDia, isLoading: isLoadingDia, isError: isErrorDia } = useRankingByDate(selectedDate)
   const { t } = useLanguage()
   const [openModal, setOpenModal] = useState<"maiores" | "menores" | null>(null)
 
@@ -224,6 +227,7 @@ export function TopCharts({ selectedDate = null }: TopChartsProps) {
   const usingDate = !!selectedDate
   const ranking = usingDate ? rankingDia : rankingSemanal
   const isLoading = usingDate ? isLoadingDia : isLoadingSemanal
+  const isError = usingDate ? isErrorDia : isErrorSemanal
 
   // Ordenacao base do ranking completo (do maior para o menor)
   const maioresFull: ChartData[] = [...ranking]
@@ -264,6 +268,7 @@ export function TopCharts({ selectedDate = null }: TopChartsProps) {
         playerLabel={t.player}
         pointsLabel={t.points}
         noDataText={t.noDataAvailable}
+        isError={!!isError}
         onViewFull={() => setOpenModal("maiores")}
         viewFullLabel={t.viewFullRanking}
         hasData={maioresFull.length > 0}
