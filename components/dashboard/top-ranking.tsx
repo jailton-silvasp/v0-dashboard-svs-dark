@@ -77,7 +77,8 @@ function PlayerAvatar({
     </div>
   )
 }
-\nfunction getPositionColor(position: number) {
+
+function getPositionColor(position: number) {
   if (position === 1) return "text-[#c9a55c]"
   if (position === 2) return "text-gray-400"
   if (position === 3) return "text-amber-700"
