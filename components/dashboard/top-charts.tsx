@@ -66,7 +66,7 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, isE
               <Skeleton className="w-10 h-4 bg-[#2a2a2a] ml-auto" />
             </div>
           ))
-        ) : isError ? (
+        ) : isError && data.length === 0 ? (
           <div className="text-center py-4 text-gray-500 text-sm">{errorText}</div>
         ) : data.length === 0 ? (
           <div className="text-center py-4 text-gray-500 text-sm">
