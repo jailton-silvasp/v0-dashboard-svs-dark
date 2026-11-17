@@ -7,39 +7,33 @@ import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
-// Calcula a data de reset da semana (domingo as 00:00 horario do servidor = sabado 23:00 Brasil)
+// Calcula o próximo início de ciclo: segunda-feira às 00:00 em Brasília.
 function getWeekResetInfo(locale: string): { daysLeft: number; resetDate: string } {
   const now = new Date()
-  // Ajusta para timezone Brasil (UTC-3)
-  const brasilOffset = -3 * 60
-  const localOffset = now.getTimezoneOffset()
-  const brasilNow = new Date(now.getTime() + (localOffset + brasilOffset) * 60000)
-  
-  const dayOfWeek = brasilNow.getDay() // 0 = domingo, 6 = sabado
+  const brasilNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }))
+  const dayOfWeek = brasilNow.getDay() // 0 = domingo, 1 = segunda, 6 = sábado
   const hour = brasilNow.getHours()
-  
-  // Se for sabado apos 23h, conta como novo ciclo (0 dias restantes)
-  let daysUntilSaturday23h: number
-  if (dayOfWeek === 6 && hour >= 23) {
-    daysUntilSaturday23h = 7 // proximo sabado
-  } else if (dayOfWeek === 6) {
-    daysUntilSaturday23h = 0 // ainda e sabado antes das 23h
+
+  let daysUntilMonday: number
+  if (dayOfWeek === 0) {
+    daysUntilMonday = 1
+  } else if (dayOfWeek === 6 && hour >= 23) {
+    daysUntilMonday = 2
   } else {
-    // Dias ate sabado
-    daysUntilSaturday23h = (6 - dayOfWeek)
+    daysUntilMonday = (8 - dayOfWeek) % 7 || 7
   }
-  
+
   const resetDate = new Date(brasilNow)
-  resetDate.setDate(resetDate.getDate() + daysUntilSaturday23h)
-  resetDate.setHours(23, 0, 0, 0)
-  
-  const resetDateStr = resetDate.toLocaleDateString(locale, { 
-    weekday: 'short', 
-    day: '2-digit', 
-    month: '2-digit' 
+  resetDate.setDate(resetDate.getDate() + daysUntilMonday)
+  resetDate.setHours(0, 0, 0, 0)
+
+  const resetDateStr = resetDate.toLocaleDateString(locale, {
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit"
   })
-  
-  return { daysLeft: daysUntilSaturday23h, resetDate: resetDateStr }
+
+  return { daysLeft: daysUntilMonday, resetDate: resetDateStr }
 }
 
 
