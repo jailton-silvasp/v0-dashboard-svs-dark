@@ -27,7 +27,7 @@ const COLOR = "#c9a55c"
 const COLOR_TODAY = "#e8c87a"
 
 export function WeeklyVsPerformance() {
-  const { data, isLoading } = useVsEvolucaoSemanal()
+  const { data, isLoading, isError } = useVsEvolucaoSemanal()
   const { t } = useLanguage()
 
   // Data ISO de hoje no fuso de Brasília para destacar a barra do dia
@@ -84,6 +84,22 @@ export function WeeklyVsPerformance() {
               style={{ height: `${80 + ((i * 37) % 140)}px` }}
             />
           ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp className="w-5 h-5 text-[#c9a55c]" />
+          <h3 className="text-white font-semibold uppercase tracking-wide text-sm">
+            {t.weeklyVsPerformance}
+          </h3>
+        </div>
+        <div className="h-[250px] flex items-center justify-center">
+          <p className="text-gray-500 text-sm">{t.errorLoadingRanking}</p>
         </div>
       </div>
     )
