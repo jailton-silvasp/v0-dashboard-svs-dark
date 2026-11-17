@@ -7,8 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
 export function MetricCards() {
-  const { data: dashboardData, isLoading: isLoadingDashboard, isError: isErrorDashboard } = useDashboard()
-  const { ranking, isLoading: isLoadingRanking, isError: isErrorRanking } = useRankingDiario()
+  const { data: dashboardData, hasData: hasDashboardData, isLoading: isLoadingDashboard, isError: isErrorDashboard } = useDashboard()
+  const { ranking, hasData: hasRankingData, isLoading: isLoadingRanking, isError: isErrorRanking } = useRankingDiario()
   const { t } = useLanguage()
 
   const isLoading = isLoadingDashboard || isLoadingRanking
@@ -68,7 +68,7 @@ export function MetricCards() {
     )
   }
 
-  if (hasError) {
+  if (hasError && ((isErrorDashboard && !hasDashboardData) || (isErrorRanking && !hasRankingData))) {
     return (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[t.vsToday, t.vsTotal, t.topScore, t.players].map((label) => (
