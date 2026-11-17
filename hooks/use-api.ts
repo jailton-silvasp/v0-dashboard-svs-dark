@@ -13,6 +13,7 @@ export function useRanking(period?: "day" | "all") {
 
   return {
     ranking: data ?? [],
+    hasData: data !== undefined,
     isLoading,
     isError: error,
     mutate,
