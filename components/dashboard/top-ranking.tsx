@@ -1,11 +1,12 @@
 "use client"
 
-import { Trophy, Crown, User, ChevronRight, X, Calendar } from "lucide-react"
+import { Trophy, Crown, ChevronRight, X, Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRankingSemanalGeral } from "@/hooks/use-api"
 import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
+import { PlayerAvatar } from "@/components/dashboard/player-avatar"
 
 // O ciclo semanal vira no domingo às 23:00 em Brasília.
 function getWeekResetInfo(locale: string): { daysLeft: number; resetDate: string } {
@@ -30,41 +31,6 @@ function getWeekResetInfo(locale: string): { daysLeft: number; resetDate: string
   return { daysLeft: daysUntilSunday, resetDate: resetDateStr }
 }
 
-
-function PlayerAvatar({
-  src,
-  name,
-  size,
-}: {
-  src?: string
-  name: string
-  size: number
-}) {
-  const [imageFailed, setImageFailed] = useState(false)
-  const hasAvatar = Boolean(src && src.trim()) && !imageFailed
-
-  return (
-    <div
-      className="rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden flex-shrink-0"
-      style={{ width: size, height: size }}
-    >
-      {hasAvatar ? (
-        <img
-          src={src}
-          alt={name}
-          width={size}
-          height={size}
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          onError={() => setImageFailed(true)}
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <User className="w-4 h-4 text-gray-500" aria-label={`Avatar indisponível para ${name}`} />
-      )}
-    </div>
-  )
-}
 
 function getPositionColor(position: number) {
   if (position === 1) return "text-[#c9a55c]"
