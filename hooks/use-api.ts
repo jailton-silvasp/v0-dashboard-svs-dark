@@ -32,6 +32,7 @@ export function useDashboard() {
 
   return {
     data,
+    hasData: data !== undefined,
     isLoading,
     isError: error,
     mutate,
