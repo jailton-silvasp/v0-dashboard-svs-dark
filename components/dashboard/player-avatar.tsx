@@ -11,9 +11,9 @@ interface PlayerAvatarProps {
 }
 
 export function PlayerAvatar({ src, name, size = 32, className = "" }: PlayerAvatarProps) {
-  const [imageFailed, setImageFailed] = useState(false)
+  const [failedSrc, setFailedSrc] = useState<string | null>(null)
   const normalizedSrc = typeof src === "string" ? src.trim() : ""
-  const hasAvatar = normalizedSrc.length > 0 && !imageFailed
+  const hasAvatar = normalizedSrc.length > 0 && failedSrc !== normalizedSrc
 
   return (
     <div
@@ -28,7 +28,7 @@ export function PlayerAvatar({ src, name, size = 32, className = "" }: PlayerAva
           height={size}
           loading="lazy"
           referrerPolicy="no-referrer"
-          onError={() => setImageFailed(true)}
+          onError={() => setFailedSrc(normalizedSrc)}
           className="w-full h-full object-cover"
         />
       ) : (
