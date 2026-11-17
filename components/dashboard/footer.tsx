@@ -1,12 +1,13 @@
 "use client"
 
-import { Swords, Info, Terminal, Clock, Crown, X, User, Flag } from "lucide-react"
+import { Swords, Info, Terminal, Clock, Crown, X, Flag } from "lucide-react"
 import { useRecentRecords, useF1Semanal } from "@/hooks/use-api"
 import { formatPoints, formatBrazilTime } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import Image from "next/image"
 import { useState } from "react"
 import { useLanguage } from "@/contexts/language-context"
+import { PlayerAvatar } from "@/components/dashboard/player-avatar"
 
 const getCommands = (t: {
   cmdVsDesc: string
@@ -84,19 +85,7 @@ function RecordsModal({ isOpen, onClose, records, translations }: RecordsModalPr
                   className="grid grid-cols-[1fr_100px_80px] sm:grid-cols-[1fr_120px_100px] gap-2 items-center px-4 sm:px-6 py-3 hover:bg-[#2a2a2a] transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden flex-shrink-0">
-                      {record.avatar_url ? (
-                        <img
-                          src={record.avatar_url}
-                          alt={record.usuario}
-                          width={32}
-                          height={32}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <User className="w-4 h-4 text-gray-500" />
-                      )}
-                    </div>
+                    <PlayerAvatar src={record.avatar_url} name={record.usuario} size={32} />
                     <span className="text-white text-sm truncate">
                       {record.usuario}
                     </span>
