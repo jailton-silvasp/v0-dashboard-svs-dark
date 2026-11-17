@@ -7,11 +7,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
 export function MetricCards() {
-  const { data: dashboardData, isLoading: isLoadingDashboard } = useDashboard()
-  const { ranking, isLoading: isLoadingRanking } = useRankingDiario()
+  const { data: dashboardData, isLoading: isLoadingDashboard, isError: isErrorDashboard } = useDashboard()
+  const { ranking, isLoading: isLoadingRanking, isError: isErrorRanking } = useRankingDiario()
   const { t } = useLanguage()
 
   const isLoading = isLoadingDashboard || isLoadingRanking
+  const hasError = isErrorDashboard || isErrorRanking
   const vsTotal = dashboardData?.vs ?? []
   const totalVs = vsTotal.reduce((sum, player) => sum + toFiniteNumber(player.total), 0)
   const topScore = vsTotal[0]?.total ?? 0
@@ -61,6 +62,18 @@ export function MetricCards() {
             </div>
             <Skeleton className="w-20 h-8 bg-[#2a2a2a] mb-1" />
             <Skeleton className="w-24 h-3 bg-[#2a2a2a]" />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (hasError) {
+    return (
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[t.vsToday, t.vsTotal, t.topScore, t.players].map((label) => (
+          <div key={label} className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 flex items-center justify-center min-h-[112px]">
+            <p className="text-gray-500 text-sm text-center">{t.errorLoadingRanking}</p>
           </div>
         ))}
       </div>
