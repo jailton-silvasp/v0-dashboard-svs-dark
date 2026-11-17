@@ -63,7 +63,9 @@ export function MVPCard() {
         </div>
 
         {/* Info */}
-        {isError || !mvp ? (
+        {isError ? (
+          <div className="text-center"><p className="text-gray-500">{t.errorLoadingRanking}</p></div>
+        ) : !mvp ? (
           <div className="text-center">
             <p className="text-gray-500">{t.noMvpYet}</p>
           </div>
