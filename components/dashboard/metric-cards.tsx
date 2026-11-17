@@ -1,14 +1,14 @@
 "use client"
 
 import { Swords, Trophy, Flag, Users } from "lucide-react"
-import { useDashboard, useRanking } from "@/hooks/use-api"
+import { useDashboard, useRankingDiario } from "@/hooks/use-api"
 import { formatPoints, toFiniteNumber } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
 export function MetricCards() {
   const { data: dashboardData, isLoading: isLoadingDashboard } = useDashboard()
-  const { ranking, isLoading: isLoadingRanking } = useRanking()
+  const { ranking, isLoading: isLoadingRanking } = useRankingDiario()
   const { t } = useLanguage()
 
   const isLoading = isLoadingDashboard || isLoadingRanking
