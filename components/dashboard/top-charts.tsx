@@ -286,6 +286,8 @@ export function TopCharts({ selectedDate = null }: TopChartsProps) {
         pointsLabel={t.points}
         noDataText={t.noDataAvailable}
         invertBarScale={true}
+        isError={!!isError}
+        errorText={t.errorLoadingRanking}
         onViewFull={() => setOpenModal("menores")}
         viewFullLabel={t.viewFullRanking}
         hasData={menoresFull.length > 0}
