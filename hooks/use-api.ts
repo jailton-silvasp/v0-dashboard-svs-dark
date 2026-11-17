@@ -125,9 +125,10 @@ export function getWeekDates(): string[] {
   const spNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }))
   const dayOfWeek = spNow.getDay() // 0=Dom ... 6=Sáb
 
-  // Domingo mantém o ranking encerrado da semana anterior.
-  // O novo ciclo começa somente na segunda-feira às 00:00 de Brasília.
-  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+  // Domingo mantém a semana encerrada até 22h59.
+  // Às 23h de domingo, a data lógica já é segunda e o novo ciclo começa.
+  const isSundayAfterReset = dayOfWeek === 0 && spNow.getHours() >= 23
+  const daysSinceMonday = isSundayAfterReset ? 0 : dayOfWeek === 0 ? 6 : dayOfWeek - 1
   const startMonday = new Date(spNow)
   startMonday.setDate(spNow.getDate() - daysSinceMonday)
 
