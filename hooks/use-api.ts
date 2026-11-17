@@ -157,18 +157,18 @@ export function useVsEvolucaoSemanal() {
     async () => {
       const results = await Promise.all(
         dates.map(async (date): Promise<DayVsTotal> => {
-          try {
-            const url = `${API_URL}/ranking?period=day&date=${date}`
-            const res = await fetch(url)
-            if (!res.ok) return { date, total: 0 }
-            const players: RankingPlayer[] = await res.json()
-            const total = Array.isArray(players)
-              ? players.reduce((sum, p) => sum + toFiniteNumber(p.total), 0)
-              : 0
-            return { date, total }
-          } catch {
-            return { date, total: 0 }
+          const url = `${API_URL}/ranking?period=day&date=${date}`
+          const res = await fetch(url)
+          if (!res.ok) {
+            throw new Error(`Falha ao consultar VS de ${date}: HTTP ${res.status}`)
           }
+
+          const players: RankingPlayer[] = await res.json()
+          const total = Array.isArray(players)
+            ? players.reduce((sum, p) => sum + toFiniteNumber(p.total), 0)
+            : 0
+
+          return { date, total }
         })
       )
       return results
