@@ -7,24 +7,21 @@ import { useLanguage } from "@/contexts/language-context"
 // Calcula a data do "dia atual" considerando que apos 23h conta como dia seguinte
 // (meia noite no servidor = 23h Brasil)
 function getServerDate(): string {
-  const now = new Date()
-  // Ajusta para timezone Brasil (UTC-3)
-  const brasilOffset = -3 * 60
-  const localOffset = now.getTimezoneOffset()
-  const brasilNow = new Date(now.getTime() + (localOffset + brasilOffset) * 60000)
-  
-  const hour = brasilNow.getHours()
-  
-  // Se for apos 23h, considera como proximo dia
-  if (hour >= 23) {
-    brasilNow.setDate(brasilNow.getDate() + 1)
-  }
-
-  // Formata a data no fuso local sem converter o instante para UTC.
-  const year = brasilNow.getFullYear()
-  const month = String(brasilNow.getMonth() + 1).padStart(2, "0")
-  const day = String(brasilNow.getDate()).padStart(2, "0")
-  return `${year}-${month}-${day}`
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(new Date())
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]))
+  const logicalDate = new Date(Date.UTC(
+    Number(values.year),
+    Number(values.month) - 1,
+    Number(values.day) + (Number(values.hour) >= 23 ? 1 : 0),
+  ))
+  return logicalDate.toISOString().slice(0, 10)
 }
 
 interface VsDiarioFilterProps {
