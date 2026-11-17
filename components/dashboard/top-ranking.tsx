@@ -7,25 +7,19 @@ import { formatPoints } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useLanguage } from "@/contexts/language-context"
 
-// Calcula o próximo início de ciclo: segunda-feira às 00:00 em Brasília.
+// O ciclo semanal vira no domingo às 23:00 em Brasília.
 function getWeekResetInfo(locale: string): { daysLeft: number; resetDate: string } {
   const now = new Date()
   const brasilNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }))
   const dayOfWeek = brasilNow.getDay() // 0 = domingo, 1 = segunda, 6 = sábado
   const hour = brasilNow.getHours()
 
-  let daysUntilMonday: number
-  if (dayOfWeek === 0) {
-    daysUntilMonday = 1
-  } else if (dayOfWeek === 6 && hour >= 23) {
-    daysUntilMonday = 2
-  } else {
-    daysUntilMonday = (8 - dayOfWeek) % 7 || 7
-  }
+  const alreadyResetToday = dayOfWeek === 0 && hour >= 23
+  const daysUntilSunday = alreadyResetToday ? 7 : (7 - dayOfWeek) % 7
 
   const resetDate = new Date(brasilNow)
-  resetDate.setDate(resetDate.getDate() + daysUntilMonday)
-  resetDate.setHours(0, 0, 0, 0)
+  resetDate.setDate(resetDate.getDate() + daysUntilSunday)
+  resetDate.setHours(23, 0, 0, 0)
 
   const resetDateStr = resetDate.toLocaleDateString(locale, {
     weekday: "short",
@@ -33,7 +27,7 @@ function getWeekResetInfo(locale: string): { daysLeft: number; resetDate: string
     month: "2-digit"
   })
 
-  return { daysLeft: daysUntilMonday, resetDate: resetDateStr }
+  return { daysLeft: daysUntilSunday, resetDate: resetDateStr }
 }
 
 
