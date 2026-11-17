@@ -122,28 +122,14 @@ export function useRankingSemanalGeral() {
 // Domingo é folga (sem atividade). O ciclo encerra no sábado 23h Brasília.
 export function getWeekDates(): string[] {
   const now = new Date()
-  // "Agora" no fuso de Brasília
   const spNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }))
   const dayOfWeek = spNow.getDay() // 0=Dom ... 6=Sáb
-  const hour = spNow.getHours()
 
-  // Quantos dias até o sábado que encerra o ciclo (mesma lógica do TopRanking)
-  let daysUntilSaturday: number
-  if (dayOfWeek === 6 && hour >= 23) {
-    daysUntilSaturday = 7 // já virou o ciclo, encerra no próximo sábado
-  } else if (dayOfWeek === 6) {
-    daysUntilSaturday = 0
-  } else {
-    daysUntilSaturday = 6 - dayOfWeek
-  }
-
-  // Sábado que encerra o ciclo atual
-  const endSaturday = new Date(spNow)
-  endSaturday.setDate(spNow.getDate() + daysUntilSaturday)
-
-  // Segunda-feira que inicia o ciclo (5 dias antes do sábado)
-  const startMonday = new Date(endSaturday)
-  startMonday.setDate(endSaturday.getDate() - 5)
+  // Domingo mantém o ranking encerrado da semana anterior.
+  // O novo ciclo começa somente na segunda-feira às 00:00 de Brasília.
+  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+  const startMonday = new Date(spNow)
+  startMonday.setDate(spNow.getDate() - daysSinceMonday)
 
   const dates: string[] = []
   for (let i = 0; i < 6; i++) {
