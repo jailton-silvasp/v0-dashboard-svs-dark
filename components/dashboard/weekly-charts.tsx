@@ -29,10 +29,11 @@ interface VerticalChartProps {
   subtitle: string
   isLoading?: boolean
   isError?: boolean
+  errorText: string
   pointsLabel: string
 }
 
-function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, isError, pointsLabel }: VerticalChartProps) {
+function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, isError, errorText, pointsLabel }: VerticalChartProps) {
   const maxPoints = data.length > 0 ? Math.max(...data.map(d => d.points)) : 1
   const yAxisMax = Math.ceil(maxPoints * 1.2)
   
@@ -82,7 +83,7 @@ function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, isErr
       </div>
 
       {isError ? (
-        <div className="h-[250px] flex items-center justify-center"><p className="text-gray-500 text-sm">Erro ao carregar ranking</p></div>
+        <div className="h-[250px] flex items-center justify-center"><p className="text-gray-500 text-sm">{errorText}</p></div>
       ) : data.length === 0 ? (
         <div className="h-[250px] flex items-center justify-center">
           <p className="text-gray-500 text-sm">{subtitle}</p>
@@ -155,7 +156,7 @@ export function WeeklyCharts() {
       points: toFiniteNumber(p.total)
     }))
 
-  // F1: ultima marcacao da semana - ordenado em ordem decrescente
+  // F1: ultima marcacao registrada de cada jogador - ordenado em ordem decrescente
   const f1Data: ChartData[] = [...f1Semanal]
     .sort((a, b) => toFiniteNumber(b.total) - toFiniteNumber(a.total))
     .slice(0, 15)
@@ -174,6 +175,7 @@ export function WeeklyCharts() {
         subtitle={t.weeklyVsScore}
         isLoading={isLoadingVs}
         isError={!!isErrorVs}
+        errorText={t.errorLoadingRanking}
         pointsLabel={t.pointsLower}
       />
       <VerticalBarChart
@@ -184,6 +186,7 @@ export function WeeklyCharts() {
         subtitle={t.lastF1MarkOfWeek}
         isLoading={isLoadingF1}
         isError={!!isErrorF1}
+        errorText={t.errorLoadingRanking}
         pointsLabel={t.pointsLower}
       />
     </div>
