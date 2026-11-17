@@ -42,7 +42,42 @@ function getWeekResetInfo(locale: string): { daysLeft: number; resetDate: string
   return { daysLeft: daysUntilSaturday23h, resetDate: resetDateStr }
 }
 
-function getPositionColor(position: number) {
+
+function PlayerAvatar({
+  src,
+  name,
+  size,
+}: {
+  src?: string
+  name: string
+  size: number
+}) {
+  const [imageFailed, setImageFailed] = useState(false)
+  const hasAvatar = Boolean(src && src.trim()) && !imageFailed
+
+  return (
+    <div
+      className="rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden flex-shrink-0"
+      style={{ width: size, height: size }}
+    >
+      {hasAvatar ? (
+        <img
+          src={src}
+          alt={name}
+          width={size}
+          height={size}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={() => setImageFailed(true)}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <User className="w-4 h-4 text-gray-500" aria-label={`Avatar indisponível para ${name}`} />
+      )}
+    </div>
+  )
+}
+\nfunction getPositionColor(position: number) {
   if (position === 1) return "text-[#c9a55c]"
   if (position === 2) return "text-gray-400"
   if (position === 3) return "text-amber-700"
@@ -124,19 +159,7 @@ function RankingModal({ isOpen, onClose, ranking, translations }: RankingModalPr
                   </span>
 
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden flex-shrink-0">
-                      {player.avatar_url ? (
-                        <img
-                          src={player.avatar_url}
-                          alt={player.usuario}
-                          width={32}
-                          height={32}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <User className="w-4 h-4 text-gray-500" />
-                      )}
-                    </div>
+                    <PlayerAvatar src={player.avatar_url} name={player.usuario} size={32} />
 
                     <span className="text-white text-sm truncate">
                       {player.usuario}
@@ -236,19 +259,7 @@ export function TopRanking() {
                   </span>
 
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden">
-                      {player.avatar_url ? (
-                        <img
-                          src={player.avatar_url}
-                          alt={player.usuario}
-                          width={28}
-                          height={28}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <User className="w-4 h-4 text-gray-500" />
-                      )}
-                    </div>
+                    <PlayerAvatar src={player.avatar_url} name={player.usuario} size={28} />
 
                     <span className="text-white text-sm group-hover:text-[#c9a55c] transition-colors truncate">
                       {player.usuario}
