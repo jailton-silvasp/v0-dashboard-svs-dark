@@ -89,7 +89,7 @@ export function WeeklyVsPerformance() {
     )
   }
 
-  if (isError) {
+  if (isError && data.length === 0) {
     return (
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-5">
         <div className="flex items-center gap-2 mb-4">
