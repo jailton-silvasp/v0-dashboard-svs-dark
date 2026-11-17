@@ -28,10 +28,11 @@ interface VerticalChartProps {
   color: string
   subtitle: string
   isLoading?: boolean
+  isError?: boolean
   pointsLabel: string
 }
 
-function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, pointsLabel }: VerticalChartProps) {
+function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, isError, pointsLabel }: VerticalChartProps) {
   const maxPoints = data.length > 0 ? Math.max(...data.map(d => d.points)) : 1
   const yAxisMax = Math.ceil(maxPoints * 1.2)
   
@@ -80,7 +81,9 @@ function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, point
         </h3>
       </div>
 
-      {data.length === 0 ? (
+      {isError ? (
+        <div className="h-[250px] flex items-center justify-center"><p className="text-gray-500 text-sm">Erro ao carregar ranking</p></div>
+      ) : data.length === 0 ? (
         <div className="h-[250px] flex items-center justify-center">
           <p className="text-gray-500 text-sm">{subtitle}</p>
         </div>
@@ -139,8 +142,8 @@ function VerticalBarChart({ title, icon, data, color, subtitle, isLoading, point
 }
 
 export function WeeklyCharts() {
-  const { ranking: vsSemanal, isLoading: isLoadingVs } = useVsSemanal()
-  const { ranking: f1Semanal, isLoading: isLoadingF1 } = useF1Semanal()
+  const { ranking: vsSemanal, isLoading: isLoadingVs, isError: isErrorVs } = useVsSemanal()
+  const { ranking: f1Semanal, isLoading: isLoadingF1, isError: isErrorF1 } = useF1Semanal()
   const { t } = useLanguage()
 
   // VS: soma semanal de todas as marcacoes - ordenado em ordem decrescente
@@ -170,6 +173,7 @@ export function WeeklyCharts() {
         color="#c9a55c"
         subtitle={t.weeklyVsScore}
         isLoading={isLoadingVs}
+        isError={!!isErrorVs}
         pointsLabel={t.pointsLower}
       />
       <VerticalBarChart
@@ -179,6 +183,7 @@ export function WeeklyCharts() {
         color="#3b82f6"
         subtitle={t.lastF1MarkOfWeek}
         isLoading={isLoadingF1}
+        isError={!!isErrorF1}
         pointsLabel={t.pointsLower}
       />
     </div>
