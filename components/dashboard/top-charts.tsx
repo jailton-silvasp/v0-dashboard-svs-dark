@@ -25,13 +25,14 @@ interface ChartProps {
   pointsLabel: string
   noDataText: string
   isError?: boolean
+  errorText: string
   invertBarScale?: boolean // Para menores pontos, inverte a escala das barras
   onViewFull: () => void
   viewFullLabel: string
   hasData: boolean
 }
 
-function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, isError, playerLabel, pointsLabel, noDataText, invertBarScale, onViewFull, viewFullLabel, hasData }: ChartProps) {
+function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, isError, playerLabel, pointsLabel, noDataText, errorText, invertBarScale, onViewFull, viewFullLabel, hasData }: ChartProps) {
   // Para menores pontos, usa o maior valor do array para calcular proporção das barras
   const maxPoints = data.length > 0
     ? (invertBarScale ? Math.max(...data.map(d => d.points)) : data[0].points)
@@ -66,7 +67,7 @@ function HorizontalBarChart({ title, icon, data, color, subtitle, isLoading, isE
             </div>
           ))
         ) : isError ? (
-          <div className="text-center py-4 text-gray-500 text-sm">{"Erro ao carregar ranking"}</div>
+          <div className="text-center py-4 text-gray-500 text-sm">{errorText}</div>
         ) : data.length === 0 ? (
           <div className="text-center py-4 text-gray-500 text-sm">
             {noDataText}
@@ -269,6 +270,7 @@ export function TopCharts({ selectedDate = null }: TopChartsProps) {
         pointsLabel={t.points}
         noDataText={t.noDataAvailable}
         isError={!!isError}
+        errorText={t.errorLoadingRanking}
         onViewFull={() => setOpenModal("maiores")}
         viewFullLabel={t.viewFullRanking}
         hasData={maioresFull.length > 0}
