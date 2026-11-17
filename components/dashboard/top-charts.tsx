@@ -1,11 +1,12 @@
 "use client"
 
-import { Trophy, TrendingDown, User, X } from "lucide-react"
+import { Trophy, TrendingDown, X } from "lucide-react"
 import { useState } from "react"
 import { useRankingSemanalGeral, useRankingByDate } from "@/hooks/use-api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatPoints } from "@/lib/api"
 import { useLanguage } from "@/contexts/language-context"
+import { PlayerAvatar } from "@/components/dashboard/player-avatar"
 
 interface ChartData {
   name: string
@@ -174,19 +175,7 @@ function ChartModal({ isOpen, onClose, title, icon, data, playerLabel, pointsLab
                   </span>
 
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] flex items-center justify-center overflow-hidden flex-shrink-0">
-                      {player.avatar_url ? (
-                        <img
-                          src={player.avatar_url}
-                          alt={player.name}
-                          width={32}
-                          height={32}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <User className="w-4 h-4 text-gray-500" />
-                      )}
-                    </div>
+                    <PlayerAvatar src={player.avatar_url} name={player.name} size={32} />
 
                     <span className="text-white text-sm truncate">
                       {player.name}
